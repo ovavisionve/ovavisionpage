@@ -10,7 +10,7 @@ type Message = {
   content: string;
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-assistant`;
+const CHAT_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/chat-assistant`;
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
