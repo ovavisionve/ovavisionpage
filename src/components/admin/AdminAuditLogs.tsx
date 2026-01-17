@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";  // Comentado: Supabase desactivado temporalmente
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -45,30 +46,53 @@ const AdminAuditLogs = () => {
   const [actionFilter, setActionFilter] = useState<string>("all");
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    // fetchData();  // Comentado: Supabase desactivado
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const [logsRes, profilesRes] = await Promise.all([
-        supabase.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(200),
-        supabase.from("profiles").select("id, full_name, email"),
-      ]);
+    // Datos dummy para probar la UI
+    setTimeout(() => {
+      const dummyLogs: AuditLog[] = [
+        {
+          id: "1",
+          user_id: "user-1",
+          action: "INSERT",
+          table_name: "projects",
+          record_id: "proj-123",
+          old_data: null,
+          new_data: { name: "Proyecto Web Nueva" },
+          created_at: new Date().toISOString(),
+        },
+        {
+          id: "2",
+          user_id: "user-2",
+          action: "UPDATE",
+          table_name: "contacts",
+          record_id: "lead-456",
+          old_data: { status: "nuevo" },
+          new_data: { status: "contactado" },
+          created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hora atrás
+        },
+        {
+          id: "3",
+          user_id: null,
+          action: "DELETE",
+          table_name: "messages",
+          record_id: "msg-789",
+          old_data: null,
+          new_data: null,
+          created_at: new Date(Date.now() - 7200000).toISOString(),
+        },
+      ];
 
-      setLogs(logsRes.data || []);
+      const dummyProfiles: Record<string, Profile> = {
+        "user-1": { id: "user-1", full_name: "Ana López", email: "ana@ovavision.com" },
+        "user-2": { id: "user-2", full_name: "Carlos Ruiz", email: "carlos@ovavision.com" },
+      };
 
-      const profilesMap: Record<string, Profile> = {};
-      (profilesRes.data || []).forEach((p: Profile) => {
-        profilesMap[p.id] = p;
-      });
-      setProfiles(profilesMap);
-    } catch (error) {
-      console.error("Error fetching audit logs:", error);
-    } finally {
+      setLogs(dummyLogs);
+      setProfiles(dummyProfiles);
       setIsLoading(false);
-    }
-  };
+    }, 800);
+  }, []);
 
   const filteredLogs = logs.filter((log) => {
     const matchesSearch =
@@ -85,12 +109,8 @@ const AdminAuditLogs = () => {
 
   const getChangeSummary = (log: AuditLog): string => {
     if (log.action === "INSERT" && log.new_data) {
-      if (log.table_name === "contacts") {
-        return `Nuevo lead: ${log.new_data.name || "Sin nombre"}`;
-      }
-      if (log.table_name === "projects") {
-        return `Nuevo proyecto: ${log.new_data.name || "Sin nombre"}`;
-      }
+      if (log.table_name === "contacts") return `Nuevo lead: ${log.new_data.name || "Sin nombre"}`;
+      if (log.table_name === "projects") return `Nuevo proyecto: ${log.new_data.name || "Sin nombre"}`;
       return "Nuevo registro creado";
     }
 
@@ -104,9 +124,7 @@ const AdminAuditLogs = () => {
       return changes.length > 0 ? `Campos actualizados: ${changes.slice(0, 3).join(", ")}${changes.length > 3 ? "..." : ""}` : "Sin cambios detectados";
     }
 
-    if (log.action === "DELETE") {
-      return "Registro eliminado";
-    }
+    if (log.action === "DELETE") return "Registro eliminado";
 
     return "Acción registrada";
   };
@@ -167,7 +185,7 @@ const AdminAuditLogs = () => {
         <CardContent>
           <div className="space-y-3">
             {filteredLogs.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">No hay logs de auditoría</p>
+              <p className="text-center text-muted-foreground py-8">No hay logs de auditoría (datos simulados)</p>
             ) : (
               filteredLogs.map((log) => {
                 const actionConfig = ACTION_CONFIG[log.action] || { label: log.action, color: "bg-gray-500/20 text-gray-400", icon: RefreshCw };

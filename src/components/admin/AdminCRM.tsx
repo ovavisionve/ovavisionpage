@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+// import { supabase } from "@/integrations/supabase/client";  // Comentado temporalmente: Supabase desactivado
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -58,30 +59,96 @@ const AdminCRM = () => {
   const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
-    fetchContacts();
+    // fetchContacts();  // Comentado: Supabase desactivado temporalmente
+
+    // Datos dummy para probar la UI completa
+    setTimeout(() => {
+      const dummyContacts: Contact[] = [
+        {
+          id: "contact-1",
+          name: "María González",
+          email: "maria@techsolutions.es",
+          company: "Tech Solutions SL",
+          service: "Desarrollo Web",
+          message: "Interesada en rediseño de sitio e-commerce",
+          status: "nuevo",
+          notes: "Llamar el lunes para agendar demo",
+          priority: "high",
+          estimated_value: 8500,
+          last_contact_date: "2026-01-15T14:30:00Z",
+          source: "Formulario web",
+          created_at: "2026-01-10T09:15:00Z",
+        },
+        {
+          id: "contact-2",
+          name: "Carlos Ruiz",
+          email: "carlos@startupinnovate.com",
+          company: "Startup Innovate",
+          service: "Marketing Digital",
+          message: null,
+          status: "contactado",
+          notes: "Enviada propuesta SEO + Ads",
+          priority: "medium",
+          estimated_value: 4200,
+          last_contact_date: "2026-01-12T11:00:00Z",
+          source: "LinkedIn",
+          created_at: "2026-01-08T16:45:00Z",
+        },
+        {
+          id: "contact-3",
+          name: "Ana López",
+          email: "ana@corporativo.es",
+          company: null,
+          service: "Branding",
+          message: "Necesito logo y manual de identidad urgente",
+          status: "negociacion",
+          notes: "Negociando presupuesto",
+          priority: "high",
+          estimated_value: 12000,
+          last_contact_date: "2026-01-14T10:20:00Z",
+          source: "Referido",
+          created_at: "2026-01-05T13:30:00Z",
+        },
+        {
+          id: "contact-4",
+          name: "Juan Pérez",
+          email: "juan@freelance.net",
+          company: "Freelance Personal",
+          service: "Diseño UI/UX",
+          message: null,
+          status: "cerrado_perdido",
+          notes: "Presupuesto fuera de rango",
+          priority: "low",
+          estimated_value: 0,
+          last_contact_date: "2026-01-09T17:00:00Z",
+          source: "Google Ads",
+          created_at: "2025-12-20T15:10:00Z",
+        },
+        {
+          id: "contact-5",
+          name: "Laura Martínez",
+          email: "laura@empresa.com",
+          company: "Empresa Grande SA",
+          service: "Campaña Publicidad",
+          message: "Interesada en estrategia completa",
+          status: "propuesta",
+          notes: "Propuesta enviada ayer",
+          priority: "medium",
+          estimated_value: 9500,
+          last_contact_date: "2026-01-16T09:45:00Z",
+          source: "Evento",
+          created_at: "2026-01-14T11:20:00Z",
+        },
+      ];
+
+      setContacts(dummyContacts);
+      setIsLoading(false);
+    }, 800);
   }, []);
 
   useEffect(() => {
     filterContacts();
   }, [contacts, searchTerm, statusFilter]);
-
-  const fetchContacts = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("contacts")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setContacts(data || []);
-    } catch (error) {
-      console.error("Error fetching contacts:", error);
-      toast({ title: "Error", description: "No se pudieron cargar los contactos", variant: "destructive" });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const filterContacts = () => {
     let filtered = [...contacts];
@@ -103,74 +170,10 @@ const AdminCRM = () => {
     setFilteredContacts(filtered);
   };
 
-  const updateContactStatus = async (id: string, newStatus: string) => {
-    try {
-      const validStatus = newStatus as "nuevo" | "contactado" | "negociacion" | "propuesta" | "cerrado_ganado" | "cerrado_perdido";
-      const { error } = await supabase
-        .from("contacts")
-        .update({ 
-          status: validStatus, 
-          last_contact_date: new Date().toISOString() 
-        })
-        .eq("id", id);
-
-      if (error) throw error;
-
-      setContacts((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, status: newStatus, last_contact_date: new Date().toISOString() } : c))
-      );
-
-      toast({ title: "Estado actualizado", description: `Lead movido a ${STATUS_CONFIG[newStatus]?.label}` });
-    } catch (error) {
-      console.error("Error updating status:", error);
-      toast({ title: "Error", description: "No se pudo actualizar el estado", variant: "destructive" });
-    }
-  };
-
-  const updateContactDetails = async (id: string, updates: Partial<Contact>) => {
-    try {
-      const dbUpdates: any = { ...updates };
-      if (updates.status) {
-        dbUpdates.status = updates.status as "nuevo" | "contactado" | "negociacion" | "propuesta" | "cerrado_ganado" | "cerrado_perdido";
-      }
-      
-      const { error } = await supabase
-        .from("contacts")
-        .update(dbUpdates)
-        .eq("id", id);
-
-      if (error) throw error;
-
-      setContacts((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, ...updates } : c))
-      );
-
-      if (selectedContact?.id === id) {
-        setSelectedContact({ ...selectedContact, ...updates });
-      }
-
-      toast({ title: "Actualizado", description: "Información del lead actualizada" });
-    } catch (error) {
-      console.error("Error updating contact:", error);
-      toast({ title: "Error", description: "No se pudo actualizar", variant: "destructive" });
-    }
-  };
-
-  const deleteContact = async (id: string) => {
-    if (!confirm("¿Estás seguro de eliminar este lead?")) return;
-
-    try {
-      const { error } = await supabase.from("contacts").delete().eq("id", id);
-      if (error) throw error;
-
-      setContacts((prev) => prev.filter((c) => c.id !== id));
-      setIsDetailOpen(false);
-      toast({ title: "Eliminado", description: "Lead eliminado correctamente" });
-    } catch (error) {
-      console.error("Error deleting contact:", error);
-      toast({ title: "Error", description: "No se pudo eliminar el lead", variant: "destructive" });
-    }
-  };
+  // Funciones comentadas (Supabase desactivado)
+  // const updateContactStatus = async (...) => { ... }
+  // const updateContactDetails = async (...) => { ... }
+  // const deleteContact = async (...) => { ... }
 
   const exportToCSV = () => {
     setIsExporting(true);
@@ -243,7 +246,10 @@ const AdminCRM = () => {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchContacts}>
+          <Button variant="outline" size="sm" onClick={() => {
+            // fetchContacts(); // Comentado
+            toast({ title: "Actualizado", description: "Datos simulados refrescados" });
+          }}>
             <RefreshCw className="w-4 h-4 mr-2" />
             Actualizar
           </Button>
@@ -351,52 +357,34 @@ const AdminCRM = () => {
                   </div>
                 )}
 
-                {/* Status Change */}
-                <div className="grid grid-cols-2 gap-4">
+                {/* Status Change - Desactivado temporalmente */}
+                <div className="grid grid-cols-2 gap-4 opacity-50 pointer-events-none">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Cambiar estado</label>
-                    <Select
-                      value={selectedContact.status}
-                      onValueChange={(value) => updateContactStatus(selectedContact.id, value)}
-                    >
+                    <Select value={selectedContact.status} disabled>
                       <SelectTrigger className="mt-1">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(STATUS_CONFIG).map(([key, config]) => (
-                          <SelectItem key={key} value={key}>{config.label}</SelectItem>
-                        ))}
-                      </SelectContent>
                     </Select>
                   </div>
 
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Prioridad</label>
-                    <Select
-                      value={selectedContact.priority || "medium"}
-                      onValueChange={(value) => updateContactDetails(selectedContact.id, { priority: value })}
-                    >
+                    <Select value={selectedContact.priority || "medium"} disabled>
                       <SelectTrigger className="mt-1">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
-                          <SelectItem key={key} value={key}>{config.label}</SelectItem>
-                        ))}
-                      </SelectContent>
                     </Select>
                   </div>
                 </div>
 
                 {/* Estimated Value */}
-                <div>
+                <div className="opacity-50 pointer-events-none">
                   <label className="text-sm font-medium text-muted-foreground">Valor estimado ($)</label>
                   <Input
                     type="number"
                     value={selectedContact.estimated_value || ""}
-                    onChange={(e) => updateContactDetails(selectedContact.id, { 
-                      estimated_value: e.target.value ? parseFloat(e.target.value) : null 
-                    })}
+                    disabled
                     placeholder="Ej: 5000"
                     className="mt-1"
                   />
@@ -407,37 +395,26 @@ const AdminCRM = () => {
                   <label className="text-sm font-medium text-muted-foreground">Notas internas</label>
                   <Textarea
                     value={selectedContact.notes || ""}
-                    onChange={(e) => updateContactDetails(selectedContact.id, { notes: e.target.value })}
-                    placeholder="Agregar notas sobre este lead..."
+                    onChange={() => {}} // Desactivado
+                    placeholder="Notas no editables mientras Supabase está desactivado"
                     className="mt-1"
                     rows={4}
+                    disabled
                   />
                 </div>
 
                 {/* Actions */}
                 <div className="flex justify-between pt-4 border-t">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => deleteContact(selectedContact.id)}
-                  >
+                  <Button variant="destructive" size="sm" disabled>
                     <Trash2 className="w-4 h-4 mr-2" />
                     Eliminar
                   </Button>
                   <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(`https://wa.me/?text=Hola ${selectedContact.name}`, "_blank")}
-                    >
+                    <Button variant="outline" size="sm">
                       <Phone className="w-4 h-4 mr-2" />
                       WhatsApp
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(`mailto:${selectedContact.email}`, "_blank")}
-                    >
+                    <Button variant="outline" size="sm">
                       <Mail className="w-4 h-4 mr-2" />
                       Email
                     </Button>

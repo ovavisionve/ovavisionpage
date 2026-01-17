@@ -12,9 +12,9 @@ interface NavLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
   ({ href, className, activeClassName, exact = false, children, ...props }, ref) => {
     const pathname = usePathname();
-    
-    const isActive = exact 
-      ? pathname === href 
+   
+    const isActive = exact
+      ? pathname === href
       : pathname.startsWith(href);
 
     return (
@@ -32,4 +32,5 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
 
 NavLink.displayName = "NavLink";
 
+export { NavLink };
 export default NavLink;
