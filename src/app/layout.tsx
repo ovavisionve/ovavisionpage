@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import FloatingWidgets from "@/components/FloatingWidgets";
 
 const outfit = Outfit({ 
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className={`${outfit.className} antialiased`}>
         {children}
         <Toaster />
+        <FloatingWidgets />
       </body>
     </html>
   );
