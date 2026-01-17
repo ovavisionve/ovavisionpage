@@ -9,9 +9,12 @@ const supabase = createClient(
 const GEMINI_API_KEY = process.env.GOOGLE_GEMINI_API_KEY;
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
-// Función para buscar respuestas en FAQ
+// Función para buscar respuestas en FAQ con timeout
 async function searchFAQ(userMessage: string) {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 segundo timeout
+
     // Buscar preguntas relevantes usando palabras clave
     const { data: faqs, error } = await supabase
       .from("faq")
@@ -19,6 +22,8 @@ async function searchFAQ(userMessage: string) {
       .eq("active", true)
       .order("priority", { ascending: false })
       .limit(5);
+
+    clearTimeout(timeoutId);
 
     if (error || !faqs) return null;
 
@@ -60,7 +65,7 @@ async function searchFAQ(userMessage: string) {
   }
 }
 
-// Función para llamar a Gemini
+// Función para llamar a Gemini con timeout
 async function callGemini(messages: any[]) {
   if (!GEMINI_API_KEY) {
     throw new Error("GOOGLE_GEMINI_API_KEY not configured");
@@ -82,58 +87,77 @@ Información sobre OVA VISION:
 - Ubicación: Venezuela
 - Horario: Lunes a viernes, 9 AM - 6 PM (hora Venezuela)`;
 
-  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      system: systemPrompt,
-      contents: messages.map((msg) => ({
-        role: msg.role === "user" ? "user" : "model",
-        parts: [{ text: msg.content }],
-      })),
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024,
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundo timeout para Gemini
+
+  try {
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    }),
-  });
+      signal: controller.signal,
+      body: JSON.stringify({
+        system: systemPrompt,
+        contents: messages.map((msg) => ({
+          role: msg.role === "user" ? "user" : "model",
+          parts: [{ text: msg.content }],
+        })),
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        },
+      }),
+    });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(`Gemini API error: ${error.error?.message || "Unknown error"}`);
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Gemini API error: ${error.error?.message || "Unknown error"}`);
+    }
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!text) {
+      throw new Error("No response from Gemini");
+    }
+
+    return text;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
   }
-
-  const data = await response.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!text) {
-    throw new Error("No response from Gemini");
-  }
-
-  return text;
 }
 
-// Función para guardar en historial
+// Función para guardar en historial con timeout
 async function saveConversation(userId: string, messages: any[]) {
   try {
-    await supabase.from("conversations").insert([
-      {
-        user_id: userId,
-        messages: messages,
-        status: "active",
-      },
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 segundo timeout
+    
+    await Promise.race([
+      supabase.from("conversations").insert([
+        {
+          user_id: userId,
+          messages: messages,
+          status: "active",
+        },
+      ]),
+      new Promise((_, reject) => controller.signal.addEventListener("abort", () => reject(new Error("Timeout")))),
     ]);
+    
+    clearTimeout(timeoutId);
   } catch (error) {
     console.error("Error saving conversation:", error);
     // No fallar si no se guarda el historial
   }
 }
 
-// Función para registrar logs
+// Función para registrar logs con timeout
 async function logChat(
   userMessage: string,
   botResponse: string,
@@ -143,16 +167,24 @@ async function logChat(
   responseTime: number
 ) {
   try {
-    await supabase.from("chat_logs").insert([
-      {
-        user_message: userMessage,
-        bot_response: botResponse,
-        used_faq: usedFaq,
-        faq_id: faqId,
-        used_gemini: usedGemini,
-        response_time_ms: responseTime,
-      },
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 segundo timeout
+    
+    await Promise.race([
+      supabase.from("chat_logs").insert([
+        {
+          user_message: userMessage,
+          bot_response: botResponse,
+          used_faq: usedFaq,
+          faq_id: faqId,
+          used_gemini: usedGemini,
+          response_time_ms: responseTime,
+        },
+      ]),
+      new Promise((_, reject) => controller.signal.addEventListener("abort", () => reject(new Error("Timeout")))),
     ]);
+    
+    clearTimeout(timeoutId);
   } catch (error) {
     console.error("Error logging chat:", error);
   }

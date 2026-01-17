@@ -40,15 +40,21 @@ const ChatBot = () => {
     setIsLoading(true);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundo timeout máximo
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        signal: controller.signal,
         body: JSON.stringify({
           messages: newMessages,
         }),
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error("Error en la respuesta del servidor");
