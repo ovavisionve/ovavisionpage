@@ -29,16 +29,40 @@ export default function HeroSection() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simular envío
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "¡Mensaje enviado!",
-      description: "Nos pondremos en contacto contigo pronto.",
-    });
-    
-    setFormData({ name: "", email: "", company: "", service: "", message: "" });
-    setIsSubmitting(false);
+    try {
+      const response = await fetch("/api/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: "Error",
+          description: data.error || "Hubo un error al enviar tu solicitud",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "¡Mensaje enviado!",
+          description: "Nos pondremos en contacto contigo pronto.",
+        });
+        setFormData({ name: "", email: "", company: "", service: "", message: "" });
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast({
+        title: "Error",
+        description: "Error al procesar tu solicitud",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
