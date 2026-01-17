@@ -3,7 +3,7 @@
 import { MessageCircle } from "lucide-react";
 
 export default function WhatsAppButton() {
-  const phoneNumber = "584121234567";
+  const phoneNumber = "584245781707";
   const message = "Hola, me interesa conocer más sobre los servicios de OVA VISION";
 
   return (
