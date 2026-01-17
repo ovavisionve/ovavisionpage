@@ -158,12 +158,12 @@ export default function HeroSection() {
                 <select
                   value={formData.service}
                   onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm"
+                  className="w-full h-10 rounded-md border border-input bg-background text-foreground px-3 py-2 text-sm hover:bg-background/80 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:ring-offset-background cursor-pointer"
                   required
                 >
-                  <option value="">Selecciona un servicio</option>
+                  <option value="" className="bg-background text-foreground">Selecciona un servicio</option>
                   {services.map((service) => (
-                    <option key={service} value={service}>
+                    <option key={service} value={service} className="bg-background text-foreground">
                       {service}
                     </option>
                   ))}
