@@ -1,26 +1,277 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Colors - OVA VISION Brand */
+  --color-background: hsl(239 97% 5%);
+  --color-foreground: hsl(0 0% 100%);
+  --color-card: hsl(239 97% 10%);
+  --color-card-foreground: hsl(0 0% 100%);
+  --color-popover: hsl(239 97% 8%);
+  --color-popover-foreground: hsl(0 0% 100%);
+  --color-primary: hsl(239 97% 40%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(206 100% 55%);
+  --color-secondary-foreground: hsl(0 0% 100%);
+  --color-muted: hsl(239 60% 18%);
+  --color-muted-foreground: hsl(210 20% 85%);
+  --color-accent: hsl(49 98% 55%);
+  --color-accent-foreground: hsl(239 97% 8%);
+  --color-destructive: hsl(9 91% 49%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(239 50% 40%);
+  --color-input: hsl(239 50% 25%);
+  --color-ring: hsl(206 100% 55%);
+  
+  /* OVA Brand Colors */
+  --color-ova-amber: hsl(49 98% 55%);
+  --color-ova-orange: hsl(9 91% 55%);
+  --color-ova-cyan: hsl(206 100% 47%);
+  --color-ova-deep-blue: hsl(239 97% 45%);
+  --color-ova-light-blue: hsl(206 100% 55%);
+  
+  /* Border radius */
+  --radius-lg: 1rem;
+  --radius-md: calc(var(--radius-lg) - 2px);
+  --radius-sm: calc(var(--radius-lg) - 4px);
+  
+  /* Font */
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base styles */
+* {
+  border-color: var(--color-border);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Glass Card Effect */
+.glass-card {
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid hsl(239 50% 40% / 0.5);
+  background: linear-gradient(145deg, 
+    hsl(239 97% 12% / 0.95) 0%, 
+    hsl(239 97% 8% / 0.98) 100%
+  );
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px hsl(239 97% 5% / 0.5);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  opacity: 0.3;
+  background: linear-gradient(135deg, 
+    hsl(206 100% 50% / 0.08) 0%, 
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, hsl(239 97% 37%) 0%, hsl(206 100% 47%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-accent {
+  background: linear-gradient(135deg, hsl(49 98% 48%) 0%, hsl(9 91% 49%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow Effects */
+.glow-blue {
+  box-shadow: 0 0 40px hsl(206 100% 47% / 0.35);
+}
+
+.glow-yellow {
+  box-shadow: 0 0 40px hsl(49 98% 48% / 0.35);
+}
+
+/* Hero Gradient */
+.hero-gradient {
+  background: 
+    radial-gradient(ellipse at 0% 0%, hsl(49 98% 55% / 0.12) 0%, transparent 35%),
+    radial-gradient(ellipse at 100% 0%, hsl(9 91% 55% / 0.1) 0%, transparent 30%),
+    radial-gradient(ellipse at 50% 40%, hsl(206 100% 55% / 0.15) 0%, transparent 45%),
+    radial-gradient(ellipse at 0% 100%, hsl(206 100% 55% / 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 100% 80%, hsl(239 97% 45% / 0.1) 0%, transparent 35%),
+    hsl(239 97% 4%);
+}
+
+/* Section Gradients */
+.section-gradient-1 {
+  background: 
+    radial-gradient(ellipse at 100% 0%, hsl(206 100% 55% / 0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 0% 50%, hsl(239 97% 45% / 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 80%, hsl(49 98% 55% / 0.08) 0%, transparent 35%),
+    hsl(239 97% 4%);
+}
+
+.section-gradient-2 {
+  background: 
+    radial-gradient(ellipse at 0% 0%, hsl(49 98% 55% / 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 100% 50%, hsl(9 91% 55% / 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 100%, hsl(206 100% 55% / 0.1) 0%, transparent 35%),
+    hsl(239 97% 5%);
+}
+
+.section-gradient-3 {
+  background: 
+    radial-gradient(ellipse at 20% 20%, hsl(206 100% 55% / 0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 60%, hsl(239 97% 50% / 0.1) 0%, transparent 45%),
+    radial-gradient(ellipse at 100% 100%, hsl(49 98% 55% / 0.08) 0%, transparent 35%),
+    hsl(239 97% 4%);
+}
+
+.section-gradient-4 {
+  background: 
+    radial-gradient(ellipse at 100% 20%, hsl(9 91% 55% / 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 0% 80%, hsl(206 100% 55% / 0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, hsl(239 97% 45% / 0.08) 0%, transparent 50%),
+    hsl(239 97% 5%);
+}
+
+/* Animated background orbs */
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: orb-float 8s ease-in-out infinite;
+}
+
+.bg-orb-yellow { background: hsl(49 98% 48%); }
+.bg-orb-amber { background: hsl(49 98% 48%); }
+.bg-orb-light-blue { background: hsl(206 100% 47%); }
+.bg-orb-cyan { background: hsl(206 100% 47%); }
+.bg-orb-blue { background: hsl(239 97% 37%); }
+.bg-orb-orange { background: hsl(9 91% 49%); }
+
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(10px, -15px) scale(1.05); }
+  50% { transform: translate(-5px, 10px) scale(0.95); }
+  75% { transform: translate(-10px, -5px) scale(1.02); }
+}
+
+/* Animated Border */
+.animated-border {
+  position: relative;
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, 
+    hsl(49 98% 48%) 0%, 
+    hsl(206 100% 47%) 50%, 
+    hsl(49 98% 48%) 100%
+  );
+  background-size: 200% 100%;
+  animation: border-flow 3s linear infinite;
+  z-index: -1;
+}
+
+@keyframes border-flow {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* Float Animation */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Pulse Glow */
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px hsl(206 100% 47% / 0.3); }
+  50% { box-shadow: 0 0 40px hsl(206 100% 47% / 0.5); }
+}
+
+/* Grid Pattern */
+.grid-pattern {
+  background-image: 
+    linear-gradient(hsl(206 100% 47% / 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(206 100% 47% / 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.6s ease-out forwards;
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.6s ease-out forwards;
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
