@@ -47,6 +47,15 @@ export default function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
           {/* Left Content */}
           <div className="animate-fade-in">
+            {/* OVA Vision Logo */}
+            <div className="mb-12">
+              <img 
+                src="/assets/logo-ova-vision.png" 
+                alt="OVA Vision" 
+                className="h-32 md:h-40 lg:h-48 w-auto"
+              />
+            </div>
+            
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
               Agencia de Automatización IA
