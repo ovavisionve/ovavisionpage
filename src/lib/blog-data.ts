@@ -73,7 +73,7 @@ La automatización bien implementada puede transformar tu empresa. La clave est�
 
 ¿Listo para automatizar correctamente? Agenda una consultoría gratuita con OVA VISION y te ayudamos a evitar estos errores desde el inicio.
     `,
-    cover_image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop",
+    cover_image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
     author_name: "OVA VISION",
     category: "Guías Prácticas",
     tags: ["automatización", "errores", "mejores prácticas"],
@@ -149,7 +149,7 @@ La automatización con IA ya no es opcional; es necesaria para mantenerse compet
 
 ¿Necesitas ayuda para identificar qué automatizar en tu empresa? Contacta a OVA VISION para una evaluación gratuita.
     `,
-    cover_image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop",
+    cover_image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
     author_name: "OVA VISION",
     category: "Guías Prácticas",
     tags: ["automatización", "IA", "guía", "procesos"],
@@ -231,7 +231,7 @@ Venezuela está en una posición única donde las empresas que adopten IA tempra
 
 OVA VISION entiende el contexto local y puede ayudarte a implementar soluciones de IA adaptadas a la realidad venezolana. ¡Agenda tu consultoría gratuita!
     `,
-    cover_image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop",
+    cover_image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
     author_name: "OVA VISION",
     category: "Tendencias",
     tags: ["tendencias", "IA", "Venezuela", "2025"],
@@ -320,7 +320,7 @@ Implementamos un sistema donde:
 
 Cada empresa es diferente, pero los principios son los mismos. Agenda una consultoría gratuita con OVA VISION y evaluamos juntos cómo automatizar tus procesos.
     `,
-    cover_image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop",
+    cover_image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80",
     author_name: "OVA VISION",
     category: "Casos de Estudio",
     tags: ["caso de estudio", "automatización", "productividad", "Venezuela"],
@@ -431,7 +431,7 @@ En la era digital, tu marca es tu activo más valioso. Una identidad visual prof
 
 ¿Listo para elevar tu marca? En OVA VISION combinamos estrategia y diseño para crear identidades que conectan y convierten. ¡Hablemos!
     `,
-    cover_image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=400&fit=crop",
+    cover_image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80",
     author_name: "OVA VISION",
     category: "Branding",
     tags: ["branding", "identidad visual", "diseño", "marketing"],
@@ -573,7 +573,7 @@ El low-code ha democratizado la automatización. Ya no necesitas ser una gran em
 
 ¿No sabes por dónde empezar? En OVA VISION te ayudamos a identificar los mejores procesos para automatizar y elegir las herramientas correctas. ¡Agenda tu consultoría gratuita!
     `,
-    cover_image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
+    cover_image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
     author_name: "OVA VISION",
     category: "Automatización",
     tags: ["low-code", "no-code", "automatización", "herramientas"],
