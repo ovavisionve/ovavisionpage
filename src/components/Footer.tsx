@@ -74,7 +74,7 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#automatizacion" className="text-foreground/70 hover:text-foreground transition-colors">
+                  <Link href="/servicios" className="text-foreground/70 hover:text-foreground transition-colors">
                     Automatización
                   </Link>
                 </li>
@@ -84,7 +84,7 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#equipo" className="text-foreground/70 hover:text-foreground transition-colors">
+                  <Link href="/que-es-ova#equipo" className="text-foreground/70 hover:text-foreground transition-colors">
                     Equipo
                   </Link>
                 </li>

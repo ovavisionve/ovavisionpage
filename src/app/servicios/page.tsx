@@ -13,43 +13,37 @@ import {
   MessageSquare, Brain, Bot, Workflow
 } from "lucide-react";
 
-// Servicios Creativos según el PDF actualizado
+// Servicios Creativos
 const brandingServices = [
   {
     icon: Shapes,
     title: "Branding",
-    description: "Concepto de marca completa: brief estratégico, personalidad, voz y tono. Rediseño o creación de logo (3 versiones), paleta de colores, tipografías, elementos gráficos, manual de marca básico y mockups/aplicaciones básicas (redes, papelería, POP).",
-    entregables: ["AI", "PDF", "JPG (fondo transparente)"]
+    description: "Concepto de marca completa con logo, paleta de colores, tipografías y manual de marca básico."
   },
   {
     icon: Paintbrush,
     title: "Diseño de Logo",
-    description: "3 variaciones de logo con versiones en positivo y negativo (blanco y negro). Incluye paleta de colores, tipografía y manual básico del logo (área de protección y usos básicos).",
-    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
+    description: "3 variaciones de logo con versiones en positivo y negativo, paleta de colores y manual básico."
   },
   {
     icon: Image,
     title: "Ilustraciones / Elementos Gráficos",
-    description: "Arte visual personalizado que da vida a tus ideas y conceptos de marca. Ilustraciones finales aprobadas (3 modificaciones permitidas), adaptaciones de tamaño según uso, archivos optimizados para digital e impresión.",
-    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
+    description: "Arte visual personalizado para tu marca, optimizado para digital e impresión."
   },
   {
     icon: Package,
     title: "Diseño de Empaques",
-    description: "Rediseño o diseño final del empaque (plano mecánico) con hasta 3 modificaciones. Adaptación del diseño al formato del producto, mockups de uso real y ambiente, archivos listos para impresión y guía básica de uso.",
-    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
+    description: "Diseño de empaque con mockups de uso real y archivos listos para impresión."
   },
   {
     icon: Lightbulb,
     title: "Propuesta Creativa (Desde Cero con OVA)",
-    description: "Propuesta creativa completa desde cero: Branding completo + Logo + sistema visual + Ilustraciones/elementos gráficos + Diseño de empaques (2) + Creación web + Manual de marca + Aplicaciones reales.",
-    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
+    description: "Paquete completo: Branding + Logo + Ilustraciones + Empaques + Web + Manual de marca."
   },
   {
     icon: Globe,
     title: "Creación Web",
-    description: "Desarrollo del sitio web completo, carga de contenido, optimización básica de navegación y publicación del sitio web.",
-    entregables: ["Sitio web publicado", "Accesos administrativos"]
+    description: "Desarrollo completo del sitio web con contenido optimizado y publicación."
   },
 ];
 
@@ -158,16 +152,7 @@ export default function Servicios() {
                           <service.icon className="w-5 h-5 text-foreground" />
                         </div>
                         <h3 className="font-bold mb-2">{service.title}</h3>
-                        <p className="text-sm text-foreground/70 mb-3">{service.description}</p>
-                        {service.entregables && (
-                          <div className="flex flex-wrap gap-1">
-                            {service.entregables.map((ent) => (
-                              <span key={ent} className="text-xs px-2 py-0.5 rounded bg-ova-amber/10 text-ova-amber">
-                                {ent}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                        <p className="text-sm text-foreground/70">{service.description}</p>
                       </div>
                     ))}
                   </div>

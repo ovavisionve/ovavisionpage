@@ -25,7 +25,7 @@ const steps = [
 
 export default function ProcessSection() {
   return (
-    <section className="py-24 lg:py-32 section-gradient-2">
+    <section id="proceso" className="py-24 lg:py-32 section-gradient-2">
       <div className="container px-6 mx-auto">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
