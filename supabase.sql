@@ -178,3 +178,51 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_faq_updated_at BEFORE UPDATE ON faq
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- 5. Tabla de Blog Posts
+-- =====================================================
+
+CREATE TABLE blog_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  title VARCHAR(500) NOT NULL,
+  slug VARCHAR(500) UNIQUE NOT NULL,
+  excerpt TEXT,
+  content TEXT NOT NULL,
+  cover_image TEXT,
+  author_name VARCHAR(255) DEFAULT 'OVA VISION',
+  category VARCHAR(100),
+  tags TEXT[],
+  published BOOLEAN DEFAULT false,
+  published_at TIMESTAMP WITH TIME ZONE,
+  social_embed TEXT, -- URL del embed de redes sociales
+  social_embed_type VARCHAR(50) -- youtube, instagram, twitter, tiktok, facebook
+);
+
+CREATE INDEX idx_blog_posts_slug ON blog_posts(slug);
+CREATE INDEX idx_blog_posts_published ON blog_posts(published);
+CREATE INDEX idx_blog_posts_category ON blog_posts(category);
+CREATE INDEX idx_blog_posts_published_at ON blog_posts(published_at DESC);
+
+-- Trigger para actualizar updated_at
+CREATE TRIGGER update_blog_posts_updated_at BEFORE UPDATE ON blog_posts
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Row Level Security para Blog Posts
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+
+-- Política de lectura pública para posts publicados
+CREATE POLICY "Published posts are publicly readable" ON blog_posts
+  FOR SELECT
+  TO public
+  USING (published = true);
+
+-- Política para usuarios autenticados (admin) - CRUD completo
+CREATE POLICY "Authenticated users can manage posts" ON blog_posts
+  FOR ALL
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);

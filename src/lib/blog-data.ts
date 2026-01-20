@@ -12,6 +12,8 @@ export interface BlogPost {
   published_at: string | null;
   created_at: string;
   published?: boolean; // Optional for list view
+  social_embed?: string | null;
+  social_embed_type?: string | null;
 }
 
 export const staticBlogPosts: BlogPost[] = [

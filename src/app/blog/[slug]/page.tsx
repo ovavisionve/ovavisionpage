@@ -14,6 +14,7 @@ import { es } from "date-fns/locale";
 import { supabase } from "@/lib/supabase";
 import { staticBlogPosts, type BlogPost } from "@/lib/blog-data";
 import DOMPurify from "dompurify";
+import SocialEmbed from "@/components/SocialEmbed";
 
 // Simple markdown-like parser for basic formatting
 function parseContent(content: string): string {
@@ -248,6 +249,11 @@ export default function BlogPostPage() {
                 className="prose prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: sanitizedContent }}
               />
+
+              {/* Social Embed */}
+              {post.social_embed && post.social_embed_type && (
+                <SocialEmbed url={post.social_embed} type={post.social_embed_type} />
+              )}
 
               {/* Tags */}
               {post.tags && post.tags.length > 0 && (
