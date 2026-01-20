@@ -7,54 +7,48 @@ import ChatBot from "@/components/ChatBot";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { 
-  Paintbrush, Shapes, Image, Package, FileImage, Lightbulb, Globe,
+import {
+  Paintbrush, Shapes, Image, Package, Lightbulb, Globe,
   Zap, Layers, Cpu, Settings, Clock, Check,
   MessageSquare, Brain, Bot, Workflow
 } from "lucide-react";
 
 // Servicios Creativos según el PDF actualizado
 const brandingServices = [
-  { 
-    icon: Shapes, 
-    title: "Branding Completo", 
-    description: "Concepto de marca completa: brief estratégico, personalidad, voz y tono. Incluye manual de marca básico y aplicaciones.",
+  {
+    icon: Shapes,
+    title: "Branding",
+    description: "Concepto de marca completa: brief estratégico, personalidad, voz y tono. Rediseño o creación de logo (3 versiones), paleta de colores, tipografías, elementos gráficos, manual de marca básico y mockups/aplicaciones básicas (redes, papelería, POP).",
     entregables: ["AI", "PDF", "JPG (fondo transparente)"]
   },
-  { 
-    icon: Paintbrush, 
-    title: "Diseño de Logo", 
-    description: "3 variaciones de logo con versiones en positivo y negativo. Paleta de colores, tipografía y manual básico del logo.",
-    entregables: ["AI", "PDF", "PNG", "JPG"]
+  {
+    icon: Paintbrush,
+    title: "Diseño de Logo",
+    description: "3 variaciones de logo con versiones en positivo y negativo (blanco y negro). Incluye paleta de colores, tipografía y manual básico del logo (área de protección y usos básicos).",
+    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
   },
-  { 
-    icon: Image, 
-    title: "Ilustraciones / Elementos Gráficos", 
-    description: "Arte visual personalizado. Ilustraciones finales aprobadas con adaptaciones de tamaño según uso.",
-    entregables: ["AI", "PDF", "PNG", "JPG"]
+  {
+    icon: Image,
+    title: "Ilustraciones / Elementos Gráficos",
+    description: "Arte visual personalizado que da vida a tus ideas y conceptos de marca. Ilustraciones finales aprobadas (3 modificaciones permitidas), adaptaciones de tamaño según uso, archivos optimizados para digital e impresión.",
+    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
   },
-  { 
-    icon: Package, 
-    title: "Diseño de Empaques", 
-    description: "Diseño final del empaque (plano mecánico). Mockups de uso real y archivos listos para impresión.",
-    entregables: ["AI", "PDF", "PNG", "JPG"]
+  {
+    icon: Package,
+    title: "Diseño de Empaques",
+    description: "Rediseño o diseño final del empaque (plano mecánico) con hasta 3 modificaciones. Adaptación del diseño al formato del producto, mockups de uso real y ambiente, archivos listos para impresión y guía básica de uso.",
+    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
   },
-  { 
-    icon: FileImage, 
-    title: "Mockups y Aplicaciones", 
-    description: "Visualizaciones realistas para redes sociales, papelería y material POP.",
-    entregables: ["AI", "PDF", "PNG"]
+  {
+    icon: Lightbulb,
+    title: "Propuesta Creativa (Desde Cero con OVA)",
+    description: "Propuesta creativa completa desde cero: Branding completo + Logo + sistema visual + Ilustraciones/elementos gráficos + Diseño de empaques (2) + Creación web + Manual de marca + Aplicaciones reales.",
+    entregables: ["AI", "PDF", "PNG (fondo transparente)", "JPG"]
   },
-  { 
-    icon: Lightbulb, 
-    title: "Propuesta Creativa Completa", 
-    description: "Branding completo + Logo + Ilustraciones + Empaques (2) + Creación Web + Manual de marca + Aplicaciones reales.",
-    entregables: ["AI", "PDF", "PNG", "JPG"]
-  },
-  { 
-    icon: Globe, 
-    title: "Creación Web", 
-    description: "Desarrollo del sitio web, carga de contenido, optimización básica de navegación y publicación.",
+  {
+    icon: Globe,
+    title: "Creación Web",
+    description: "Desarrollo del sitio web completo, carga de contenido, optimización básica de navegación y publicación del sitio web.",
     entregables: ["Sitio web publicado", "Accesos administrativos"]
   },
 ];

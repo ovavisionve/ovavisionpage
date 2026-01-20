@@ -8,23 +8,11 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import ChatBot from "@/components/ChatBot";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { Calendar, User, Tag, Search, ArrowRight, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
-interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  cover_image: string | null;
-  author_name: string | null;
-  category: string | null;
-  tags: string[] | null;
-  published_at: string | null;
-  created_at: string;
-}
+import { staticBlogPosts, blogCategories, type BlogPost } from "@/lib/blog-data";
 
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -45,15 +33,23 @@ export default function Blog() {
         .order("published_at", { ascending: false });
 
       if (error) throw error;
-      setPosts(data || []);
+
+      // Use static posts as fallback if no posts from Supabase
+      if (data && data.length > 0) {
+        setPosts(data);
+      } else {
+        setPosts(staticBlogPosts.filter(p => p.published));
+      }
     } catch (error) {
       console.error("Error fetching posts:", error);
+      // Use static posts as fallback on error
+      setPosts(staticBlogPosts.filter(p => p.published));
     } finally {
       setLoading(false);
     }
   };
 
-  const categories = ["Automatización", "Inteligencia Artificial", "Casos de Estudio", "Tendencias", "Guías Prácticas"];
+  const categories = blogCategories;
 
   // Estimate reading time based on content length (avg 200 words per minute)
   const estimateReadingTime = (content: string | null) => {
