@@ -1,169 +1,291 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ChatBot from "@/components/ChatBot";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Calendar, User, Tag, Search, ArrowRight, Clock } from "lucide-react";
+import { Calendar, User, ArrowLeft, Clock, Tag } from "lucide-react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { supabase } from "@/lib/supabase";
+import { staticBlogPosts, type BlogPost } from "@/lib/blog-data";
+import DOMPurify from "dompurify";
 
-// Datos estáticos (luego los reemplazas con Supabase)
-const staticPosts = [
-  {
-    id: "1",
-    title: "Cómo la IA está transformando empresas en Venezuela",
-    slug: "ia-transformando-empresas-venezuela",
-    excerpt: "Descubre cómo las empresas venezolanas están adoptando la inteligencia artificial para mejorar sus procesos.",
-    cover_image: "/blog-covers/tendencias-ia-venezuela-cover.jpg",
-    author_name: "OVA VISION",
-    category: "Inteligencia Artificial",
-    published_at: "2025-01-10",
-  },
-  {
-    id: "2", 
-    title: "Guía completa de automatización para PyMEs",
-    slug: "guia-automatizacion-pymes",
-    excerpt: "Todo lo que necesitas saber para empezar a automatizar tu pequeña o mediana empresa.",
-    cover_image: "/blog-covers/guia-automatizacion-ia-cover.jpg",
-    author_name: "OVA VISION",
-    category: "Automatización",
-    published_at: "2025-01-05",
-  },
-  {
-    id: "3",
-    title: "5 errores comunes al automatizar procesos",
-    slug: "errores-comunes-automatizacion",
-    excerpt: "Evita estos errores frecuentes que cometen las empresas al implementar automatización.",
-    cover_image: "/blog-covers/errores-automatizacion-cover.jpg",
-    author_name: "OVA VISION",
-    category: "Guías Prácticas",
-    published_at: "2025-01-01",
-  },
-];
+// Simple markdown-like parser for basic formatting
+function parseContent(content: string): string {
+  // Split into lines
+  let html = content
+    // Headers
+    .replace(/^### (.*$)/gm, '<h3 class="text-xl font-bold mt-8 mb-4 text-foreground">$1</h3>')
+    .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-bold mt-10 mb-6 text-foreground">$1</h2>')
+    .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-12 mb-8 text-foreground">$1</h1>')
+    // Bold
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>')
+    // Italic
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Lists
+    .replace(/^- (.*$)/gm, '<li class="ml-4 text-muted-foreground">$1</li>')
+    .replace(/^(\d+)\. (.*$)/gm, '<li class="ml-4 text-muted-foreground list-decimal">$2</li>')
+    // Blockquotes
+    .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-secondary pl-4 my-4 italic text-muted-foreground">$1</blockquote>')
+    // Tables (basic)
+    .replace(/\|(.*)\|/g, (match) => {
+      const cells = match.split('|').filter(c => c.trim());
+      if (cells.some(c => c.includes('---'))) {
+        return '';
+      }
+      const cellsHtml = cells.map(c => `<td class="border border-border/50 px-4 py-2">${c.trim()}</td>`).join('');
+      return `<tr>${cellsHtml}</tr>`;
+    })
+    // Paragraphs
+    .replace(/^(?!<[hlubt]|<li|<block)(.+)$/gm, '<p class="text-muted-foreground mb-4 leading-relaxed">$1</p>');
 
-const categories = ["Automatización", "Inteligencia Artificial", "Casos de Estudio", "Tendencias", "Guías Prácticas"];
+  // Wrap lists
+  html = html.replace(/(<li[^>]*>.*<\/li>\n?)+/g, '<ul class="my-4 space-y-2">$&</ul>');
 
-export default function BlogPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // Wrap tables
+  html = html.replace(/(<tr>.*<\/tr>\n?)+/g, '<table class="w-full border-collapse my-6">$&</table>');
 
-  const filteredPosts = staticPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  return html;
+}
+
+export default function BlogPostPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
+
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (slug) {
+      fetchPost();
+    }
+  }, [slug]);
+
+  const fetchPost = async () => {
+    try {
+      // Try to fetch from Supabase first
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("*")
+        .eq("slug", slug)
+        .eq("published", true)
+        .single();
+
+      if (error || !data) {
+        // Fallback to static posts
+        const staticPost = staticBlogPosts.find(p => p.slug === slug && p.published);
+        if (staticPost) {
+          setPost(staticPost);
+        } else {
+          setNotFound(true);
+        }
+      } else {
+        setPost(data);
+      }
+    } catch (error) {
+      console.error("Error fetching post:", error);
+      // Fallback to static posts
+      const staticPost = staticBlogPosts.find(p => p.slug === slug && p.published);
+      if (staticPost) {
+        setPost(staticPost);
+      } else {
+        setNotFound(true);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Estimate reading time
+  const estimateReadingTime = (content: string | null) => {
+    if (!content) return 5;
+    const words = content.split(/\s+/).length;
+    return Math.max(3, Math.ceil(words / 200));
+  };
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-background relative overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
+          <div className="bg-orb bg-orb-cyan w-[500px] h-[500px] top-1/4 -right-32" style={{ animationDelay: '2s' }} />
+        </div>
+        <div className="relative z-10">
+          <Navbar />
+          <div className="container mx-auto px-6 pt-32 pb-16">
+            <div className="max-w-4xl mx-auto">
+              <div className="animate-pulse space-y-4">
+                <div className="h-8 bg-muted/50 rounded w-3/4" />
+                <div className="h-4 bg-muted/50 rounded w-1/2" />
+                <div className="h-64 bg-muted/50 rounded mt-8" />
+                <div className="space-y-2 mt-8">
+                  <div className="h-4 bg-muted/50 rounded" />
+                  <div className="h-4 bg-muted/50 rounded" />
+                  <div className="h-4 bg-muted/50 rounded w-3/4" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (notFound || !post) {
+    return (
+      <main className="min-h-screen bg-background relative overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
+          <div className="bg-orb bg-orb-cyan w-[500px] h-[500px] top-1/4 -right-32" style={{ animationDelay: '2s' }} />
+        </div>
+        <div className="relative z-10">
+          <Navbar />
+          <div className="container mx-auto px-6 pt-32 pb-16">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-3xl font-bold mb-4">Artículo no encontrado</h1>
+              <p className="text-muted-foreground mb-8">
+                El artículo que buscas no existe o ha sido removido.
+              </p>
+              <Link href="/blog">
+                <Button variant="hero">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Volver al Blog
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <Footer />
+        </div>
+        <WhatsAppButton />
+        <ChatBot />
+      </main>
+    );
+  }
+
+  const contentHtml = post.content ? parseContent(post.content) : '';
+  const sanitizedContent = typeof window !== 'undefined' ? DOMPurify.sanitize(contentHtml) : contentHtml;
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
+      {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[600px] h-[600px] -top-40 -left-40 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute w-[500px] h-[500px] top-1/4 -right-32 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
+        <div className="bg-orb bg-orb-cyan w-[500px] h-[500px] top-1/4 -right-32" style={{ animationDelay: '2s' }} />
       </div>
 
       <div className="relative z-10">
         <Navbar />
-        
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
-          <div className="container px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <span className="inline-block px-4 py-2 rounded-full bg-amber-500/10 text-amber-500 text-sm font-medium mb-6">
-                Blog
-              </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                Insights sobre{" "}
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
-                  IA y Automatización
+
+        {/* Article Header */}
+        <article className="pt-32 pb-16 lg:pt-40 lg:pb-24 w-full">
+          <div className="container mx-auto px-6">
+            <div className="max-w-4xl mx-auto">
+              {/* Back button */}
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-secondary transition-colors mb-8"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Volver al Blog
+              </Link>
+
+              {/* Category */}
+              {post.category && (
+                <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-6">
+                  {post.category}
                 </span>
+              )}
+
+              {/* Title */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                {post.title}
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Aprende cómo la automatización inteligente está transformando empresas.
-              </p>
-            </div>
-          </div>
-        </section>
 
-        <section className="pb-8">
-          <div className="container px-6">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="relative w-full md:w-96">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar artículos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-muted/30 border-border/50"
-                />
+              {/* Meta info */}
+              <div className="flex flex-wrap items-center gap-6 text-muted-foreground mb-8">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  <span>{post.author_name || "OVA VISION"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>
+                    {format(new Date(post.published_at || post.created_at), "d 'de' MMMM, yyyy", { locale: es })}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{estimateReadingTime(post.content || post.excerpt)} min de lectura</span>
+                </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
-                <Button
-                  variant={selectedCategory === null ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(null)}
-                >
-                  Todos
-                </Button>
-                {categories.map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="py-8 lg:py-16">
-          <div className="container px-6">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden group hover:scale-[1.02] transition-all duration-300"
-                >
-                  <div className="relative w-full h-48">
-                    <Image src={post.cover_image} alt={post.title} fill className="object-cover" />
-                  </div>
-                  <div className="p-6">
-                    <span className="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-500 text-xs font-medium mb-3">
-                      {post.category}
+              {/* Cover Image */}
+              {post.cover_image && (
+                <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-12">
+                  <img
+                    src={post.cover_image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Excerpt */}
+              {post.excerpt && (
+                <p className="text-xl text-muted-foreground mb-8 leading-relaxed border-l-4 border-secondary pl-6">
+                  {post.excerpt}
+                </p>
+              )}
+
+              {/* Content */}
+              <div
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+              />
+
+              {/* Tags */}
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-border/50">
+                  <Tag className="w-4 h-4 text-muted-foreground" />
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 rounded-full bg-muted/30 text-muted-foreground text-sm"
+                    >
+                      {tag}
                     </span>
-                    <h3 className="text-lg font-bold mb-2 group-hover:text-cyan-500 transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <User className="w-3 h-3" />
-                        <span>{post.author_name}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{post.published_at}</span>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex items-center gap-2 text-cyan-500 text-sm font-medium">
-                      Leer más <ArrowRight className="w-4 h-4" />
-                    </div>
-                  </div>
+                  ))}
+                </div>
+              )}
+
+              {/* CTA */}
+              <div className="glass-card p-8 mt-12 text-center">
+                <h3 className="text-2xl font-bold mb-4">
+                  ¿Te interesa automatizar tu empresa?
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  Agenda una consultoría gratuita y descubre cómo podemos ayudarte.
+                </p>
+                <Link href="/contacto">
+                  <Button variant="hero" size="xl">
+                    Agendar Consultoría Gratis
+                  </Button>
                 </Link>
-              ))}
+              </div>
             </div>
           </div>
-        </section>
+        </article>
 
         <Footer />
       </div>
       <WhatsAppButton />
+      <ChatBot />
     </main>
   );
 }

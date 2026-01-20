@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import { supabase } from "@/integrations/supabase/client";  // Comentado temporalmente: Supabase desactivado
+// import { supabase } from "@/lib/supabase";  // Comentado temporalmente: Supabase desactivado
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

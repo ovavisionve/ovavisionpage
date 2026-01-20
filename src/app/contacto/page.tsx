@@ -17,13 +17,16 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Send, Mail, Building2, User, Phone, MapPin, MessageSquare } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import BookingModal from "@/components/BookingModal";
 
 const services = [
-  { value: "branding", label: "Branding y Diseño Gráfico" },
-  { value: "web", label: "Desarrollo Web" },
-  { value: "3d", label: "Render 3D y Digitalización" },
+  { value: "branding", label: "Branding" },
+  { value: "logo", label: "Diseño de Logo" },
+  { value: "ilustraciones", label: "Ilustraciones / Elementos Gráficos" },
+  { value: "empaques", label: "Diseño de Empaques" },
+  { value: "propuesta-creativa", label: "Propuesta Creativa Completa" },
+  { value: "web", label: "Creación Web" },
   { value: "automation-basic", label: "Automatización Básica" },
   { value: "automation-advanced", label: "Automatización Avanzada" },
   { value: "ai-agents", label: "Agentes de IA" },
