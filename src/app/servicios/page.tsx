@@ -18,32 +18,44 @@ const brandingServices = [
   {
     icon: Shapes,
     title: "Branding",
-    description: "Concepto de marca completa con logo, paleta de colores, tipografías y manual de marca básico."
+    color: "from-ova-amber to-ova-orange",
+    features: ["Concepto de marca completa", "Logo profesional", "Paleta de colores", "Tipografías", "Manual de marca básico"],
+    ideal: "Empresas nuevas o en proceso de rebranding"
   },
   {
     icon: Paintbrush,
     title: "Diseño de Logo",
-    description: "3 variaciones de logo con versiones en positivo y negativo, paleta de colores y manual básico."
+    color: "from-pink-400 to-rose-500",
+    features: ["3 variaciones de logo", "Versiones positivo y negativo", "Paleta de colores", "Manual básico de uso"],
+    ideal: "Negocios que necesitan identidad visual rápida"
   },
   {
     icon: Image,
     title: "Ilustraciones / Elementos Gráficos",
-    description: "Arte visual personalizado para tu marca, optimizado para digital e impresión."
+    color: "from-violet-400 to-purple-500",
+    features: ["Arte visual personalizado", "Optimizado para digital", "Optimizado para impresión", "Archivos en múltiples formatos"],
+    ideal: "Marcas que buscan diferenciarse visualmente"
   },
   {
     icon: Package,
     title: "Diseño de Empaques",
-    description: "Diseño de empaque con mockups de uso real y archivos listos para impresión."
+    color: "from-cyan-400 to-blue-500",
+    features: ["Diseño de empaque completo", "Mockups de uso real", "Archivos listos para impresión", "Variantes de presentación"],
+    ideal: "Productos físicos que necesitan packaging profesional"
   },
   {
     icon: Lightbulb,
-    title: "Propuesta Creativa (Desde Cero con OVA)",
-    description: "Paquete completo: Branding + Logo + Ilustraciones + Empaques + Web + Manual de marca."
+    title: "Propuesta Creativa (desde cero con OVA)",
+    color: "from-amber-400 to-orange-500",
+    features: ["Branding completo", "Logo + Ilustraciones", "Diseño de empaques", "Sitio web incluido", "Manual de marca completo"],
+    ideal: "Proyectos nuevos que necesitan todo desde cero"
   },
   {
     icon: Globe,
     title: "Creación Web",
-    description: "Desarrollo completo del sitio web con contenido optimizado y publicación."
+    color: "from-emerald-400 to-teal-500",
+    features: ["Desarrollo web completo", "Contenido optimizado SEO", "Diseño responsive", "Publicación incluida"],
+    ideal: "Negocios que necesitan presencia digital profesional"
   },
 ];
 
@@ -144,22 +156,31 @@ export default function Servicios() {
                   <p className="text-foreground/80 mb-8">
                     Construimos identidades de marca coherentes y memorables. Desde el concepto hasta la web, todo en un solo lugar.
                   </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {brandingServices.map((service) => (
-                      <div key={service.title} className="p-5 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-ova-amber to-ova-orange flex items-center justify-center mb-3">
-                          <service.icon className="w-5 h-5 text-foreground" />
+                      <div key={service.title} className="p-6 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${service.color} flex items-center justify-center flex-shrink-0`}>
+                            <service.icon className="w-6 h-6 text-foreground" />
+                          </div>
+                          <div>
+                            <h3 className="font-bold">{service.title}</h3>
+                          </div>
                         </div>
-                        <h3 className="font-bold mb-2">{service.title}</h3>
-                        <p className="text-sm text-foreground/70">{service.description}</p>
+
+                        <ul className="space-y-2 mb-4">
+                          {service.features.map((feature) => (
+                            <li key={feature} className="flex items-center gap-2 text-sm text-foreground/70">
+                              <Check className="w-4 h-4 text-secondary" />
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+
+                        <p className="text-xs text-foreground/60 italic">{service.ideal}</p>
                       </div>
                     ))}
-                  </div>
-
-                  <div className="mt-8 p-6 rounded-lg bg-ova-amber/10 border border-ova-amber/20">
-                    <h4 className="font-bold text-ova-amber mb-2">Ideal para:</h4>
-                    <p className="text-foreground/80">Startups, empresas en rebranding, nuevos productos, negocios que necesitan presencia digital profesional</p>
                   </div>
                 </div>
               </TabsContent>
