@@ -1,10 +1,10 @@
-// src/app/contacto/page.tsx
-"use client";
+'use client';
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ChatBot from "@/components/ChatBot";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,8 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { Send, Mail, Building2, User, Phone, MapPin, MessageSquare, Calendar } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { Send, Mail, Building2, User, Phone, MapPin, MessageSquare } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import BookingModal from "@/components/BookingModal";
 
 const services = [
   { value: "branding", label: "Branding y Diseño Gráfico" },
@@ -28,22 +30,24 @@ const services = [
   { value: "custom", label: "Solución Personalizada" },
 ];
 
-export default function ContactoPage() {
-  const { toast } = useToast();
+export default function Contacto() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     company: "",
     service: "",
     message: "",
-    website: "",
+    website: "", // Honeypot field - should remain empty
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Honeypot check - if filled, silently reject (bot detected)
     if (formData.website) {
+      console.log("Bot detected via honeypot");
+      // Pretend success to not alert the bot
       toast({
         title: "¡Mensaje enviado!",
         description: "Hemos recibido tu mensaje. Te contactaremos pronto.",
@@ -63,20 +67,18 @@ export default function ContactoPage() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
           name: formData.name,
           email: formData.email,
           company: formData.company,
           service: formData.service,
           message: formData.message,
-          _hp: formData.website,
-        }),
+          _hp: formData.website, // Send honeypot for server-side validation
+        },
       });
 
-      if (!response.ok) throw new Error("Error al enviar");
+      if (error) throw error;
 
       toast({
         title: "¡Mensaje enviado!",
@@ -85,7 +87,7 @@ export default function ContactoPage() {
       
       setFormData({ name: "", email: "", company: "", service: "", message: "", website: "" });
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error sending contact form:", error);
       toast({
         title: "Error al enviar",
         description: "Hubo un problema al enviar tu mensaje. Intenta de nuevo.",
@@ -100,23 +102,23 @@ export default function ContactoPage() {
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[600px] h-[600px] -top-40 -left-40 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute w-[500px] h-[500px] top-1/4 -right-32 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
+        <div className="bg-orb bg-orb-cyan w-[500px] h-[500px] top-1/4 -right-32" style={{ animationDelay: '2s' }} />
       </div>
 
       <div className="relative z-10">
         <Navbar />
         
         {/* Hero Section */}
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
-          <div className="container px-6">
+        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="inline-block px-4 py-2 rounded-full bg-amber-500/10 text-amber-500 text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-2 rounded-full bg-ova-amber/10 text-ova-amber text-sm font-medium mb-6">
                 Contacto
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 Hablemos de tu{" "}
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-ova-amber to-ova-orange bg-clip-text text-transparent">
                   Transformación Digital
                 </span>
               </h1>
@@ -128,25 +130,25 @@ export default function ContactoPage() {
         </section>
 
         {/* Contact Section */}
-        <section className="py-8 lg:py-16">
-          <div className="container px-6">
+        <section className="py-8 lg:py-16 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {/* Contact Info */}
                 <div className="space-y-8">
-                  <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8">
+                  <div className="glass-card p-8">
                     <h2 className="text-2xl font-bold mb-6">Información de Contacto</h2>
                     
                     <div className="space-y-6">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                          <Mail className="w-5 h-5 text-cyan-500" />
+                        <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                          <Mail className="w-5 h-5 text-secondary" />
                         </div>
                         <div>
                           <p className="font-medium">Email</p>
                           <a 
                             href="mailto:ovavision.ve@gmail.com" 
-                            className="text-muted-foreground hover:text-cyan-500 transition-colors"
+                            className="text-muted-foreground hover:text-secondary transition-colors"
                           >
                             ovavision.ve@gmail.com
                           </a>
@@ -154,14 +156,14 @@ export default function ContactoPage() {
                       </div>
 
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                          <Phone className="w-5 h-5 text-cyan-500" />
+                        <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-5 h-5 text-secondary" />
                         </div>
                         <div>
                           <p className="font-medium">Teléfono</p>
                           <a 
                             href="tel:+584245781707" 
-                            className="text-muted-foreground hover:text-cyan-500 transition-colors"
+                            className="text-muted-foreground hover:text-secondary transition-colors"
                           >
                             +58 424 578 1707
                           </a>
@@ -169,8 +171,8 @@ export default function ContactoPage() {
                       </div>
 
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                          <MessageSquare className="w-5 h-5 text-cyan-500" />
+                        <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                          <MessageSquare className="w-5 h-5 text-secondary" />
                         </div>
                         <div>
                           <p className="font-medium">WhatsApp</p>
@@ -178,7 +180,7 @@ export default function ContactoPage() {
                             href="https://wa.me/584245781707" 
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-cyan-500 transition-colors"
+                            className="text-muted-foreground hover:text-secondary transition-colors"
                           >
                             Enviar mensaje directo
                           </a>
@@ -186,8 +188,8 @@ export default function ContactoPage() {
                       </div>
 
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                          <MapPin className="w-5 h-5 text-cyan-500" />
+                        <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-5 h-5 text-secondary" />
                         </div>
                         <div>
                           <p className="font-medium">Ubicación</p>
@@ -199,30 +201,23 @@ export default function ContactoPage() {
                     </div>
                   </div>
 
-                  <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 text-center">
+                  <div className="glass-card p-8 text-center">
                     <h3 className="text-xl font-bold mb-4">
                       ¿Prefieres una reunión?
                     </h3>
                     <p className="text-muted-foreground mb-6">
                       Agenda una consultoría gratuita de 30 minutos para discutir tu proyecto.
                     </p>
-                    <Button 
-                      size="lg"
-                      className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white w-full"
-                      onClick={() => window.open('https://cal.com/ova-vision-lvxwzg', '_blank')}
-                    >
-                      <Calendar className="w-5 h-5 mr-2" />
-                      Agendar Reunión
-                    </Button>
+                    <BookingModal />
                   </div>
                 </div>
 
                 {/* Contact Form */}
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12">
+                <div className="glass-card p-8 lg:p-12">
                   <h2 className="text-2xl font-bold mb-6">Envíanos un mensaje</h2>
                   
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Honeypot field */}
+                    {/* Honeypot field - hidden from users, filled by bots */}
                     <div className="absolute -left-[9999px] opacity-0 pointer-events-none" aria-hidden="true">
                       <label htmlFor="website-hp-contacto">Website</label>
                       <input
@@ -316,15 +311,16 @@ export default function ContactoPage() {
                     
                     <Button 
                       type="submit" 
-                      size="lg" 
-                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+                      variant="hero" 
+                      size="xl" 
+                      className="w-full"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
                         "Enviando..."
                       ) : (
                         <>
-                          <Send className="w-5 h-5 mr-2" />
+                          <Send className="w-5 h-5" />
                           Enviar mensaje
                         </>
                       )}
@@ -339,6 +335,7 @@ export default function ContactoPage() {
         <Footer />
       </div>
       <WhatsAppButton />
+      <ChatBot />
     </main>
   );
 }

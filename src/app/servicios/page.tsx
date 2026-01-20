@@ -1,39 +1,62 @@
-// src/app/servicios/page.tsx
-import { Metadata } from "next";
+'use client';
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ChatBot from "@/components/ChatBot";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { 
-  Paintbrush, Shapes, Image, Package, FileImage, Lightbulb,
-  Globe, Layout, Palette, Users, Box, Sparkles,
+  Paintbrush, Shapes, Image, Package, FileImage, Lightbulb, Globe,
   Zap, Layers, Cpu, Settings, Clock, Check,
   MessageSquare, Brain, Bot, Workflow
 } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Servicios de Automatización IA y Branding | OVA VISION",
-  description: "Automatización con IA, agentes inteligentes, mejora de procesos y branding estratégico. Descubre cómo nuestros servicios pueden revolucionar tu empresa.",
-};
-
+// Servicios Creativos según el PDF actualizado
 const brandingServices = [
-  { icon: Shapes, title: "Identidad Visual Completa", description: "Desarrollo integral de la identidad de marca que refleja los valores y personalidad de tu empresa." },
-  { icon: Paintbrush, title: "Diseño de Logotipo", description: "Logotipos únicos y memorables que comunican la esencia de tu marca." },
-  { icon: Image, title: "Ilustraciones", description: "Arte visual personalizado que da vida a tus ideas y conceptos de marca." },
-  { icon: FileImage, title: "Mockups", description: "Visualizaciones realistas de cómo se verá tu marca en diferentes aplicaciones." },
-  { icon: Package, title: "Diseño de Empaques", description: "Empaques atractivos que destacan en el mercado y conectan con tu audiencia." },
-  { icon: Lightbulb, title: "Propuestas Creativas", description: "Estrategias creativas y conceptos innovadores para posicionar tu marca." },
-];
-
-const webServices = [
-  { icon: Layout, title: "Diseño Web Moderno", description: "Interfaces atractivas y funcionales adaptadas a tu identidad visual." },
-  { icon: Globe, title: "Desarrollo Funcional", description: "Sitios web rápidos, seguros y optimizados para conversión." },
-  { icon: Palette, title: "Adaptación Visual", description: "Integración perfecta con tu identidad de marca existente." },
-  { icon: Users, title: "Experiencia de Usuario", description: "Navegación intuitiva que convierte visitantes en clientes." },
-  { icon: Box, title: "Modelado 3D", description: "Visualización profesional de productos y empaques." },
-  { icon: Sparkles, title: "Renderizado", description: "Imágenes fotorrealistas para marketing y catálogos." },
+  { 
+    icon: Shapes, 
+    title: "Branding Completo", 
+    description: "Concepto de marca completa: brief estratégico, personalidad, voz y tono. Incluye manual de marca básico y aplicaciones.",
+    entregables: ["AI", "PDF", "JPG (fondo transparente)"]
+  },
+  { 
+    icon: Paintbrush, 
+    title: "Diseño de Logo", 
+    description: "3 variaciones de logo con versiones en positivo y negativo. Paleta de colores, tipografía y manual básico del logo.",
+    entregables: ["AI", "PDF", "PNG", "JPG"]
+  },
+  { 
+    icon: Image, 
+    title: "Ilustraciones / Elementos Gráficos", 
+    description: "Arte visual personalizado. Ilustraciones finales aprobadas con adaptaciones de tamaño según uso.",
+    entregables: ["AI", "PDF", "PNG", "JPG"]
+  },
+  { 
+    icon: Package, 
+    title: "Diseño de Empaques", 
+    description: "Diseño final del empaque (plano mecánico). Mockups de uso real y archivos listos para impresión.",
+    entregables: ["AI", "PDF", "PNG", "JPG"]
+  },
+  { 
+    icon: FileImage, 
+    title: "Mockups y Aplicaciones", 
+    description: "Visualizaciones realistas para redes sociales, papelería y material POP.",
+    entregables: ["AI", "PDF", "PNG"]
+  },
+  { 
+    icon: Lightbulb, 
+    title: "Propuesta Creativa Completa", 
+    description: "Branding completo + Logo + Ilustraciones + Empaques (2) + Creación Web + Manual de marca + Aplicaciones reales.",
+    entregables: ["AI", "PDF", "PNG", "JPG"]
+  },
+  { 
+    icon: Globe, 
+    title: "Creación Web", 
+    description: "Desarrollo del sitio web, carga de contenido, optimización básica de navegación y publicación.",
+    entregables: ["Sitio web publicado", "Accesos administrativos"]
+  },
 ];
 
 const automationLevels = [
@@ -43,12 +66,12 @@ const automationLevels = [
     ideal: "Pequeñas empresas que quieren empezar a automatizar"
   },
   {
-    level: 2, title: "Automatización Media", time: "3-4 semanas", icon: Layers, color: "from-cyan-400 to-cyan-500",
+    level: 2, title: "Automatización Media", time: "3-4 semanas", icon: Layers, color: "from-secondary to-ova-cyan",
     features: ["Time tracking para empleados", "Generación automática de reportes", "CRM simplificado", "Facturación automatizada", "Portal de empleados + nómina"],
     ideal: "Empresas en crecimiento con procesos manuales complejos"
   },
   {
-    level: 3, title: "Automatización Avanzada", time: "1-3 meses", icon: Cpu, color: "from-amber-500 to-orange-500",
+    level: 3, title: "Automatización Avanzada", time: "1-3 meses", icon: Cpu, color: "from-ova-amber to-ova-orange",
     features: ["ERP modular completo", "Sistema de gestión de proyectos", "Logística con rutas optimizadas", "Plataforma e-learning", "Gestión documental con OCR"],
     ideal: "Corporaciones que necesitan sistemas enterprise"
   },
@@ -66,33 +89,33 @@ const aiAgentServices = [
   { icon: Workflow, title: "Automatización de Ventas", description: "Agentes que califican leads, agendan reuniones y nutren prospectos automáticamente." },
 ];
 
-export default function ServiciosPage() {
+export default function Servicios() {
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[600px] h-[600px] -top-40 -left-40 rounded-full bg-amber-500/10 blur-3xl animate-pulse" />
-        <div className="absolute w-[500px] h-[500px] top-1/4 -right-32 rounded-full bg-cyan-500/10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute w-[700px] h-[700px] top-1/2 -left-48 rounded-full bg-blue-500/10 blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+        <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
+        <div className="bg-orb bg-orb-cyan w-[500px] h-[500px] top-1/4 -right-32" style={{ animationDelay: '2s' }} />
+        <div className="bg-orb bg-orb-blue w-[700px] h-[700px] top-1/2 -left-48" style={{ animationDelay: '4s' }} />
       </div>
 
       <div className="relative z-10">
         <Navbar />
         
         {/* Hero Section */}
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
-          <div className="container px-6">
+        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="inline-block px-4 py-2 rounded-full bg-cyan-500/10 text-cyan-500 text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-6">
                 Servicios
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
                 Nuestros Servicios de{" "}
-                <span className="bg-gradient-to-r from-cyan-400 via-cyan-500 to-white bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-secondary via-ova-cyan to-white bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(0,180,255,0.5)]">
                   Automatización e IA
                 </span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              <p className="text-xl text-foreground/80 max-w-3xl mx-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
                 Transformamos procesos complejos en sistemas automatizados que trabajan 24/7.
               </p>
             </div>
@@ -100,21 +123,15 @@ export default function ServiciosPage() {
         </section>
 
         {/* Services Tabs */}
-        <section className="py-8 lg:py-16">
-          <div className="container px-6">
+        <section className="py-8 lg:py-16 w-full">
+          <div className="container mx-auto px-6">
             <Tabs defaultValue="branding" className="max-w-6xl mx-auto">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto gap-2 bg-transparent p-0 mb-12">
+              <TabsList className="grid w-full grid-cols-3 h-auto gap-2 bg-transparent p-0 mb-12">
                 <TabsTrigger 
                   value="branding" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-orange-500 data-[state=active]:text-foreground bg-muted/50 py-3 px-4 rounded-lg"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-ova-amber data-[state=active]:to-ova-orange data-[state=active]:text-foreground bg-muted/50 py-3 px-4 rounded-lg"
                 >
-                  Branding & Diseño
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="web" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-400 data-[state=active]:to-cyan-500 data-[state=active]:text-foreground bg-muted/50 py-3 px-4 rounded-lg"
-                >
-                  Web & 3D
+                  Creativos & Web
                 </TabsTrigger>
                 <TabsTrigger 
                   value="automation" 
@@ -130,71 +147,51 @@ export default function ServiciosPage() {
                 </TabsTrigger>
               </TabsList>
 
-              {/* Branding Tab */}
+              {/* Servicios Creativos Tab */}
               <TabsContent value="branding" className="mt-0">
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 mb-8">
+                <div className="glass-card p-8 lg:p-12 mb-8">
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                    Branding y Diseño Gráfico
+                    Servicios Creativos
                   </h2>
-                  <p className="text-muted-foreground mb-8">
-                    Construimos identidades de marca coherentes y memorables que conectan con tu audiencia ideal.
+                  <p className="text-foreground/80 mb-8">
+                    Construimos identidades de marca coherentes y memorables. Desde el concepto hasta la web, todo en un solo lugar.
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {brandingServices.map((service) => (
-                      <div key={service.title} className="p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center mb-3">
+                      <div key={service.title} className="p-5 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-ova-amber to-ova-orange flex items-center justify-center mb-3">
                           <service.icon className="w-5 h-5 text-foreground" />
                         </div>
-                        <h3 className="font-bold mb-1">{service.title}</h3>
-                        <p className="text-sm text-muted-foreground">{service.description}</p>
+                        <h3 className="font-bold mb-2">{service.title}</h3>
+                        <p className="text-sm text-foreground/70 mb-3">{service.description}</p>
+                        {service.entregables && (
+                          <div className="flex flex-wrap gap-1">
+                            {service.entregables.map((ent) => (
+                              <span key={ent} className="text-xs px-2 py-0.5 rounded bg-ova-amber/10 text-ova-amber">
+                                {ent}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-8 p-6 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                    <h4 className="font-bold text-amber-500 mb-2">Ideal para:</h4>
-                    <p className="text-muted-foreground">Startups, empresas en rebranding, nuevos productos/servicios</p>
-                  </div>
-                </div>
-              </TabsContent>
-
-              {/* Web & 3D Tab */}
-              <TabsContent value="web" className="mt-0">
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 mb-8">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                    Desarrollo Web y Render 3D
-                  </h2>
-                  <p className="text-muted-foreground mb-8">
-                    Sitios web profesionales y visualizaciones 3D que elevan tu presencia digital.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {webServices.map((service) => (
-                      <div key={service.title} className="p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-cyan-400 to-cyan-500 flex items-center justify-center mb-3">
-                          <service.icon className="w-5 h-5 text-foreground" />
-                        </div>
-                        <h3 className="font-bold mb-1">{service.title}</h3>
-                        <p className="text-sm text-muted-foreground">{service.description}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-8 p-6 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-                    <h4 className="font-bold text-cyan-500 mb-2">Ideal para:</h4>
-                    <p className="text-muted-foreground">Empresas que necesitan presencia digital profesional y visualización de productos</p>
+                  <div className="mt-8 p-6 rounded-lg bg-ova-amber/10 border border-ova-amber/20">
+                    <h4 className="font-bold text-ova-amber mb-2">Ideal para:</h4>
+                    <p className="text-foreground/80">Startups, empresas en rebranding, nuevos productos, negocios que necesitan presencia digital profesional</p>
                   </div>
                 </div>
               </TabsContent>
 
               {/* Automation Tab */}
               <TabsContent value="automation" className="mt-0">
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 mb-8">
+                <div className="glass-card p-8 lg:p-12 mb-8">
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
                     Niveles de Automatización
                   </h2>
-                  <p className="text-muted-foreground mb-8">
+                  <p className="text-foreground/80 mb-8">
                     Soluciones low-code/no-code diseñadas para máxima flexibilidad. Elige el nivel que mejor se adapte a tu empresa.
                   </p>
                   
@@ -206,9 +203,9 @@ export default function ServiciosPage() {
                             <level.icon className="w-6 h-6 text-foreground" />
                           </div>
                           <div>
-                            <span className="text-sm text-muted-foreground">Nivel {level.level}</span>
+                            <span className="text-sm text-foreground/70">Nivel {level.level}</span>
                             <h3 className="font-bold">{level.title}</h3>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 text-sm text-foreground/70">
                               <Clock className="w-4 h-4" />
                               {level.time}
                             </div>
@@ -217,14 +214,14 @@ export default function ServiciosPage() {
                         
                         <ul className="space-y-2 mb-4">
                           {level.features.map((feature) => (
-                            <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Check className="w-4 h-4 text-cyan-500" />
+                            <li key={feature} className="flex items-center gap-2 text-sm text-foreground/70">
+                              <Check className="w-4 h-4 text-secondary" />
                               {feature}
                             </li>
                           ))}
                         </ul>
 
-                        <p className="text-xs text-muted-foreground italic">{level.ideal}</p>
+                        <p className="text-xs text-foreground/60 italic">{level.ideal}</p>
                       </div>
                     ))}
                   </div>
@@ -233,11 +230,11 @@ export default function ServiciosPage() {
 
               {/* AI Agents Tab */}
               <TabsContent value="agents" className="mt-0">
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 mb-8">
+                <div className="glass-card p-8 lg:p-12 mb-8">
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
                     Agentes de IA Personalizados
                   </h2>
-                  <p className="text-muted-foreground mb-8">
+                  <p className="text-foreground/80 mb-8">
                     Creamos asistentes de IA entrenados específicamente para tu negocio, capaces de atender clientes, 
                     responder consultas complejas y ejecutar tareas específicas.
                   </p>
@@ -249,7 +246,7 @@ export default function ServiciosPage() {
                           <service.icon className="w-6 h-6 text-foreground" />
                         </div>
                         <h3 className="font-bold mb-2">{service.title}</h3>
-                        <p className="text-sm text-muted-foreground">{service.description}</p>
+                        <p className="text-sm text-foreground/70">{service.description}</p>
                       </div>
                     ))}
                   </div>
@@ -257,7 +254,7 @@ export default function ServiciosPage() {
                   <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/20">
                       <h4 className="font-bold text-purple-400 mb-2">Beneficios</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
+                      <ul className="text-sm text-foreground/70 space-y-1">
                         <li>• Atención 24/7 sin costos adicionales</li>
                         <li>• Respuestas consistentes y precisas</li>
                         <li>• Aprenden y mejoran con cada interacción</li>
@@ -265,7 +262,7 @@ export default function ServiciosPage() {
                     </div>
                     <div className="p-4 rounded-lg bg-pink-500/10 border border-pink-500/20">
                       <h4 className="font-bold text-pink-400 mb-2">Ideal para:</h4>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-foreground/70">
                         Ventas, soporte al cliente, atención post-venta, calificación de leads
                       </p>
                     </div>
@@ -277,20 +274,20 @@ export default function ServiciosPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 lg:py-24 bg-muted/20">
-          <div className="container px-6">
+        <section className="py-16 lg:py-24 section-gradient-1 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 ¿Listo para{" "}
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-ova-amber to-ova-orange bg-clip-text text-transparent">
                   transformar tu empresa
                 </span>?
               </h2>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="text-lg text-foreground/80 mb-8">
                 Agenda una consultoría gratuita y descubre qué servicios se adaptan mejor a tus necesidades.
               </p>
               <Link href="/contacto">
-                <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white">
+                <Button variant="hero" size="xl">
                   Solicita una Demo
                 </Button>
               </Link>
@@ -301,6 +298,7 @@ export default function ServiciosPage() {
         <Footer />
       </div>
       <WhatsAppButton />
+      <ChatBot />
     </main>
   );
 }

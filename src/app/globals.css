@@ -277,3 +277,9 @@ h1, h2, h3, h4, h5, h6 {
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
 .delay-600 { animation-delay: 600ms; }
+/* Fix overflow issue - eliminar espacio en blanco a la derecha */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}

@@ -1,16 +1,12 @@
-// src/app/que-es-ova/page.tsx
-import { Metadata } from "next";
+'use client';
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import ChatBot from "@/components/ChatBot";
 import { Users, Lightbulb, Target, Heart, Globe, Shield, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "¿Qué es OVA VISION? | Nuestra Historia y Valores",
-  description: "Conoce la historia de OVA VISION, nuestros valores y el equipo detrás de la automatización con IA más innovadora de Venezuela.",
-};
 
 const values = [
   {
@@ -48,29 +44,29 @@ const advantages = [
   "ROI Claro: Cada proyecto tiene un retorno de inversión definido desde el inicio"
 ];
 
-export default function QueEsOvaPage() {
+export default function QueEsOva() {
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[600px] h-[600px] -top-40 -left-40 rounded-full bg-amber-500/10 blur-3xl animate-pulse" />
-        <div className="absolute w-[500px] h-[500px] top-1/4 -right-32 rounded-full bg-cyan-500/10 blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute w-[700px] h-[700px] top-1/2 -left-48 rounded-full bg-blue-500/10 blur-3xl animate-pulse" style={{ animationDelay: '4s' }} />
+        <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
+        <div className="bg-orb bg-orb-cyan w-[500px] h-[500px] top-1/4 -right-32" style={{ animationDelay: '2s' }} />
+        <div className="bg-orb bg-orb-blue w-[700px] h-[700px] top-1/2 -left-48" style={{ animationDelay: '4s' }} />
       </div>
 
       <div className="relative z-10">
         <Navbar />
         
         {/* Hero Section */}
-        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24">
-          <div className="container px-6">
+        <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
-              <span className="inline-block px-4 py-2 rounded-full bg-amber-500/10 text-amber-500 text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-2 rounded-full bg-ova-amber/10 text-ova-amber text-sm font-medium mb-6">
                 Nuestra Historia
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 ¿Qué es{" "}
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-ova-amber to-ova-orange bg-clip-text text-transparent">
                   OVA VISION
                 </span>?
               </h1>
@@ -83,16 +79,16 @@ export default function QueEsOvaPage() {
         </section>
 
         {/* Cómo nace OVA */}
-        <section className="py-16 lg:py-24 bg-muted/20">
-          <div className="container px-6">
+        <section className="py-16 lg:py-24 section-gradient-1 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
                 Cómo nace{" "}
-                <span className="bg-gradient-to-r from-secondary to-cyan-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-secondary to-ova-cyan bg-clip-text text-transparent">
                   OVA VISION
                 </span>
               </h2>
-              <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 space-y-6 text-lg text-muted-foreground">
+              <div className="glass-card p-8 lg:p-12 space-y-6 text-lg text-muted-foreground">
                 <p>
                   Nace de la visión de transformar la manera en que las empresas trabajan. 
                   En un mundo donde la eficiencia es clave, OVA VISION surge como respuesta 
@@ -115,16 +111,16 @@ export default function QueEsOvaPage() {
         </section>
 
         {/* Detrás del proyecto */}
-        <section className="py-16 lg:py-24">
-          <div className="container px-6">
+        <section className="py-16 lg:py-24 section-gradient-2 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
                 Detrás del{" "}
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-ova-amber to-ova-orange bg-clip-text text-transparent">
                   Proyecto
                 </span>
               </h2>
-              <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 space-y-6 text-lg text-muted-foreground">
+              <div className="glass-card p-8 lg:p-12 space-y-6 text-lg text-muted-foreground">
                 <p>
                   Detrás de cada proyecto de automatización hay un equipo multidisciplinario 
                   que entiende que la tecnología es un medio, no un fin. Nuestro enfoque es 
@@ -140,8 +136,8 @@ export default function QueEsOvaPage() {
 
               {/* Team Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6 text-center">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                <div className="glass-card p-6 text-center">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-ova-amber to-ova-orange flex items-center justify-center mx-auto mb-4">
                     <Users className="w-10 h-10 text-foreground" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">Oriana Russo León</h3>
@@ -167,8 +163,8 @@ export default function QueEsOvaPage() {
                   </div>
                 </div>
 
-                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6 text-center">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-secondary to-cyan-500 flex items-center justify-center mx-auto mb-4">
+                <div className="glass-card p-6 text-center">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-secondary to-ova-cyan flex items-center justify-center mx-auto mb-4">
                     <Users className="w-10 h-10 text-foreground" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">Valeria V. Rodrigues Abreu</h3>
@@ -191,13 +187,13 @@ export default function QueEsOvaPage() {
         </section>
 
         {/* Nuestros Valores */}
-        <section className="py-16 lg:py-24 bg-muted/20">
-          <div className="container px-6">
+        <section className="py-16 lg:py-24 section-gradient-3 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
                   Nuestros{" "}
-                  <span className="bg-gradient-to-r from-secondary to-cyan-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-secondary to-ova-cyan bg-clip-text text-transparent">
                     Valores
                   </span>
                 </h2>
@@ -205,8 +201,8 @@ export default function QueEsOvaPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {values.map((value) => (
-                  <div key={value.title} className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6 group hover:scale-105 transition-all duration-300">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-secondary to-cyan-500 flex items-center justify-center mb-4">
+                  <div key={value.title} className="glass-card p-6 group hover:scale-105 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-secondary to-ova-cyan flex items-center justify-center mb-4">
                       <value.icon className="w-6 h-6 text-foreground" />
                     </div>
                     <h3 className="text-lg font-bold mb-2">{value.title}</h3>
@@ -219,19 +215,19 @@ export default function QueEsOvaPage() {
         </section>
 
         {/* Por qué elegirnos */}
-        <section className="py-16 lg:py-24">
-          <div className="container px-6">
+        <section className="py-16 lg:py-24 section-gradient-4 w-full">
+          <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
                   ¿Por qué{" "}
-                  <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-ova-amber to-ova-orange bg-clip-text text-transparent">
                     elegirnos
                   </span>?
                 </h2>
               </div>
 
-              <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12">
+              <div className="glass-card p-8 lg:p-12">
                 <ul className="space-y-6">
                   {advantages.map((advantage, index) => (
                     <li key={index} className="flex items-start gap-4">
@@ -245,7 +241,7 @@ export default function QueEsOvaPage() {
 
                 <div className="mt-10 text-center">
                   <Link href="/servicios">
-                    <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white">
+                    <Button variant="hero" size="xl">
                       Conoce Nuestros Servicios
                     </Button>
                   </Link>
@@ -258,6 +254,7 @@ export default function QueEsOvaPage() {
         <Footer />
       </div>
       <WhatsAppButton />
+      <ChatBot />
     </main>
   );
 }
