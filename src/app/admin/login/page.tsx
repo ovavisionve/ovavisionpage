@@ -28,7 +28,8 @@ export default function AdminLogin() {
       });
 
       if (error) {
-        setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+        console.error('Supabase auth error:', error);
+        setError(`Error: ${error.message}`);
         return;
       }
 
