@@ -10,46 +10,55 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const handleAuthCallback = async () => {
-      const hash = window.location.hash;
+      try {
+        const hash = window.location.hash;
 
-      if (!hash) {
-        setMessage('No se encontró token de autenticación');
-        setTimeout(() => router.push('/admin/login'), 2000);
-        return;
-      }
-
-      // Parse the hash to get the type
-      const params = new URLSearchParams(hash.substring(1));
-      const type = params.get('type');
-      const accessToken = params.get('access_token');
-
-      if (!accessToken) {
-        setMessage('Token inválido');
-        setTimeout(() => router.push('/admin/login'), 2000);
-        return;
-      }
-
-      // Let Supabase handle the session from the URL
-      const { data: { session }, error } = await supabase.auth.getSession();
-
-      if (error) {
-        setMessage(`Error: ${error.message}`);
-        setTimeout(() => router.push('/admin/login'), 2000);
-        return;
-      }
-
-      if (session) {
-        if (type === 'recovery') {
-          // Password recovery - redirect to reset password page
-          setMessage('Redirigiendo para cambiar contraseña...');
-          router.push(`/admin/reset-password#${hash.substring(1)}`);
-        } else {
-          // Magic link or other - redirect to admin
-          setMessage('Sesión iniciada. Redirigiendo...');
-          router.push('/admin/blog');
+        if (!hash || hash.length < 2) {
+          setMessage('No se encontró token de autenticación');
+          setTimeout(() => router.push('/admin/login'), 2000);
+          return;
         }
-      } else {
-        setMessage('No se pudo establecer la sesión');
+
+        // Parse the hash parameters
+        const hashParams = new URLSearchParams(hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+        const type = hashParams.get('type');
+
+        if (!accessToken || !refreshToken) {
+          setMessage('Token inválido o incompleto');
+          setTimeout(() => router.push('/admin/login'), 2000);
+          return;
+        }
+
+        // Set the session manually
+        const { data, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (error) {
+          console.error('Error setting session:', error);
+          setMessage(`Error: ${error.message}`);
+          setTimeout(() => router.push('/admin/login'), 3000);
+          return;
+        }
+
+        if (data.session) {
+          if (type === 'recovery') {
+            setMessage('Redirigiendo para cambiar contraseña...');
+            router.push('/admin/reset-password');
+          } else {
+            setMessage('Sesión iniciada correctamente. Redirigiendo...');
+            router.push('/admin/blog');
+          }
+        } else {
+          setMessage('No se pudo establecer la sesión');
+          setTimeout(() => router.push('/admin/login'), 2000);
+        }
+      } catch (err) {
+        console.error('Callback error:', err);
+        setMessage('Error procesando la autenticación');
         setTimeout(() => router.push('/admin/login'), 2000);
       }
     };

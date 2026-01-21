@@ -18,12 +18,14 @@ export default function ResetPasswordPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if we have a recovery token in the URL hash
-    const hash = window.location.hash;
-    if (hash && hash.includes('type=recovery')) {
-      setHasToken(true);
-      // Supabase client will automatically handle the token from the hash
-    }
+    // Check if we have an active session (set by the callback page)
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setHasToken(true);
+      }
+    };
+    checkSession();
   }, []);
 
   const handleResetPassword = async (e: React.FormEvent) => {
