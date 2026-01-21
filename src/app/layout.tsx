@@ -16,6 +16,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "OVA VISION | Agencia de Automatización IA & Branding en Venezuela",
   description: "Transformamos empresas con automatización inteligente, agentes de IA y branding estratégico.",
+  verification: {
+    google: "44SwyeUsdejhunWpOdu-zBGpSWdD1H_qeegc170DYKA",
+  },
   icons: {
     icon: [
       { url: "/favicon.png", sizes: "any", type: "image/png" },
