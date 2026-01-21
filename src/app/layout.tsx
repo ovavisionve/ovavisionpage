@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import FloatingWidgets from "@/components/FloatingWidgets";
 import { AuthProvider } from "@/contexts/AuthContext";
+import AuthHandler from "@/components/AuthHandler";
 
 const GA_ID = "G-FJE0KJMQNM";
 
@@ -55,6 +56,7 @@ export default function RootLayout({
       </head>
       <body className={`${outfit.className} antialiased`}>
         <AuthProvider>
+          <AuthHandler />
           {children}
           <Toaster />
           <FloatingWidgets />
