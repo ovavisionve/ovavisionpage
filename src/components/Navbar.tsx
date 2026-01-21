@@ -10,7 +10,7 @@ const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/servicios", label: "Servicios" },
   { href: "/que-es-ova", label: "¿Qué es OVA?" },
-  { href: "/blog", label: "Blog" },
+  { href: "/insights", label: "Insights" },
   { href: "/contacto", label: "Contacto" },
 ];
 
