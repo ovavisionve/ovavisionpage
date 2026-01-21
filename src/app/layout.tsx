@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import FloatingWidgets from "@/components/FloatingWidgets";
 import { AuthProvider } from "@/contexts/AuthContext";
+
+const GA_ID = "G-FJE0KJMQNM";
 
 const outfit = Outfit({ 
   subsets: ["latin"],
@@ -13,6 +16,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "OVA VISION | Agencia de Automatización IA & Branding en Venezuela",
   description: "Transformamos empresas con automatización inteligente, agentes de IA y branding estratégico.",
+  verification: {
+    google: "44SwyeUsdejhunWpOdu-zBGpSWdD1H_qeegc170DYKA",
+  },
   icons: {
     icon: [
       { url: "/favicon.png", sizes: "any", type: "image/png" },
@@ -33,6 +39,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
+      </head>
       <body className={`${outfit.className} antialiased`}>
         <AuthProvider>
           {children}
