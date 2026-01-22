@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { supabase } from '@/lib/supabase';
 import {
   Plus, Search, Edit, Trash2, Eye, LogOut,
-  FileText, Calendar, User, LayoutDashboard
+  FileText, Calendar, User, LayoutDashboard, Video
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -112,6 +112,12 @@ function AdminBlogContent() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link href="/admin/videos">
+                <Button variant="outline" size="sm">
+                  <Video className="w-4 h-4 mr-2" />
+                  Videos
+                </Button>
+              </Link>
               <Link href="/" target="_blank">
                 <Button variant="outline" size="sm">
                   <Eye className="w-4 h-4 mr-2" />
