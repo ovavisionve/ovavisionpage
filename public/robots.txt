@@ -1,0 +1,10 @@
+# Robots.txt para OVA VISION
+User-agent: *
+Allow: /
+
+# Bloquear páginas de admin
+Disallow: /admin/
+Disallow: /auth/
+
+# Sitemap
+Sitemap: https://www.ovavisionagency.com/sitemap.xml
