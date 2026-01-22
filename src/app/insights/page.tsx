@@ -15,13 +15,13 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { type BlogPost } from "@/lib/blog-data";
 
-// Video shorts data - estos se pueden manejar desde Supabase después
 interface VideoShort {
   id: string;
   title: string;
-  embedUrl: string;
-  thumbnail?: string;
-  platform: 'youtube' | 'tiktok' | 'instagram';
+  video_url: string;
+  thumbnail: string | null;
+  platform: string;
+  published: boolean;
 }
 
 export default function Insights() {
@@ -167,45 +167,76 @@ export default function Insights() {
                   className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                  {videos.map((video) => (
-                    <div
-                      key={video.id}
-                      className="flex-shrink-0 w-[280px] snap-start"
-                      onMouseEnter={() => setActiveVideo(video.id)}
-                      onMouseLeave={() => setActiveVideo(null)}
-                    >
-                      <div className="glass-card overflow-hidden aspect-[9/16] relative group cursor-pointer">
-                        {activeVideo === video.id ? (
-                          <iframe
-                            src={`${video.embedUrl}${video.embedUrl.includes('?') ? '&' : '?'}autoplay=1&mute=1`}
-                            className="w-full h-full"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                          />
-                        ) : (
-                          <>
-                            {video.thumbnail ? (
-                              <img
-                                src={video.thumbnail}
-                                alt={video.title}
+                  {videos.map((video) => {
+                    const getEmbedUrl = () => {
+                      const url = video.video_url;
+                      if (video.platform === 'tiktok') {
+                        const match = url.match(/video\/(\d+)/);
+                        return match ? `https://www.tiktok.com/embed/v2/${match[1]}` : url;
+                      } else if (video.platform === 'instagram') {
+                        const match = url.match(/\/(p|reel)\/([^\/\?]+)/);
+                        return match ? `https://www.instagram.com/${match[1]}/${match[2]}/embed` : url;
+                      } else if (video.platform === 'youtube') {
+                        const match = url.match(/(?:shorts\/|v=|youtu\.be\/)([^&\?\/]+)/);
+                        return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1` : url;
+                      }
+                      return url;
+                    };
+
+                    return (
+                      <div
+                        key={video.id}
+                        className="flex-shrink-0 w-[280px] snap-start"
+                        onMouseEnter={() => setActiveVideo(video.id)}
+                        onMouseLeave={() => setActiveVideo(null)}
+                      >
+                        <div className="glass-card overflow-hidden aspect-[9/16] relative group cursor-pointer">
+                          {activeVideo === video.id ? (
+                            video.platform === 'custom' ? (
+                              <video
+                                src={video.video_url}
                                 className="w-full h-full object-cover"
+                                autoPlay
+                                muted
+                                loop
+                                playsInline
                               />
                             ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-ova-amber/20 to-secondary/20 flex items-center justify-center">
-                                <Play className="w-16 h-16 text-white/50" />
+                              <iframe
+                                src={getEmbedUrl()}
+                                className="w-full h-full"
+                                allow="autoplay; encrypted-media"
+                                allowFullScreen
+                              />
+                            )
+                          ) : (
+                            <>
+                              {video.thumbnail ? (
+                                <img
+                                  src={video.thumbnail}
+                                  alt={video.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-ova-amber/20 to-secondary/20 flex items-center justify-center">
+                                  <Play className="w-16 h-16 text-white/50" />
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
+                                <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                                  <Play className="w-8 h-8 text-white fill-white" />
+                                </div>
                               </div>
-                            )}
-                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
-                              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                <Play className="w-8 h-8 text-white fill-white" />
+                              <div className="absolute bottom-2 left-2 px-2 py-1 rounded bg-black/60 text-xs capitalize">
+                                {video.platform}
                               </div>
-                            </div>
-                          </>
-                        )}
+                            </>
+                          )}
+                        </div>
+                        <p className="mt-2 text-sm font-medium line-clamp-2">{video.title}</p>
                       </div>
-                      <p className="mt-2 text-sm font-medium line-clamp-2">{video.title}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
