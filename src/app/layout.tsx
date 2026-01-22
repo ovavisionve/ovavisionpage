@@ -89,6 +89,37 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* Schema.org LocalBusiness JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "OVA VISION",
+              "description": "Agencia de Automatización IA & Branding en Venezuela. Transformamos empresas con automatización inteligente, agentes de IA y branding estratégico.",
+              "url": "https://www.ovavisionagency.com",
+              "logo": "https://www.ovavisionagency.com/assets/logo-ova-vision.png",
+              "image": "https://www.ovavisionagency.com/og-image.png",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "VE",
+                "addressRegion": "Venezuela"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "10.4806",
+                "longitude": "-66.9036"
+              },
+              "areaServed": ["Venezuela", "LATAM"],
+              "serviceType": ["Automatización", "Inteligencia Artificial", "Branding", "Diseño Web", "Agentes IA"],
+              "priceRange": "$$",
+              "sameAs": [
+                "https://www.instagram.com/ovavision.ve"
+              ]
+            })
+          }}
+        />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
