@@ -65,7 +65,7 @@ export default function AdminVideosPage() {
     setUploading(true);
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('video_shorts')
         .insert({
           title,
@@ -73,9 +73,14 @@ export default function AdminVideosPage() {
           thumbnail: thumbnail || null,
           platform,
           published: true
-        });
+        })
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        alert(`Error: ${error.message}\nCode: ${error.code}\nDetails: ${error.details || 'N/A'}`);
+        return;
+      }
 
       // Reset form
       setTitle('');
@@ -86,7 +91,7 @@ export default function AdminVideosPage() {
       fetchVideos();
     } catch (error) {
       console.error('Error adding video:', error);
-      alert('Error al agregar el video');
+      alert('Error al agregar el video: ' + (error as Error).message);
     } finally {
       setUploading(false);
     }
