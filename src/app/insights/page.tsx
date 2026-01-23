@@ -170,17 +170,18 @@ export default function Insights() {
                   {videos.map((video) => {
                     const getEmbedUrl = () => {
                       const url = video.video_url;
-                      if (video.platform === 'tiktok') {
-                        const match = url.match(/video\/(\d+)/);
-                        return match ? `https://www.tiktok.com/embed/v2/${match[1]}` : url;
-                      } else if (video.platform === 'instagram') {
-                        const match = url.match(/\/(p|reel)\/([^\/\?]+)/);
-                        return match ? `https://www.instagram.com/${match[1]}/${match[2]}/embed` : url;
-                      } else if (video.platform === 'youtube') {
+                      if (video.platform === 'youtube') {
                         const match = url.match(/(?:shorts\/|v=|youtu\.be\/)([^&\?\/]+)/);
-                        return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1` : url;
+                        return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&mute=1&loop=1` : url;
                       }
                       return url;
+                    };
+
+                    const handleVideoClick = () => {
+                      // For non-YouTube platforms, open in new tab
+                      if (video.platform !== 'youtube' && video.platform !== 'custom') {
+                        window.open(video.video_url, '_blank');
+                      }
                     };
 
                     return (
@@ -189,6 +190,7 @@ export default function Insights() {
                         className="flex-shrink-0 w-[280px] snap-start"
                         onMouseEnter={() => setActiveVideo(video.id)}
                         onMouseLeave={() => setActiveVideo(null)}
+                        onClick={handleVideoClick}
                       >
                         <div className="glass-card overflow-hidden aspect-[9/16] relative group cursor-pointer">
                           {activeVideo === video.id ? (
@@ -201,13 +203,30 @@ export default function Insights() {
                                 loop
                                 playsInline
                               />
-                            ) : (
+                            ) : video.platform === 'youtube' ? (
                               <iframe
                                 src={getEmbedUrl()}
                                 className="w-full h-full"
                                 allow="autoplay; encrypted-media"
                                 allowFullScreen
                               />
+                            ) : (
+                              // For Instagram/TikTok show "click to open" overlay
+                              <>
+                                {video.thumbnail ? (
+                                  <img
+                                    src={video.thumbnail}
+                                    alt={video.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full bg-gradient-to-br from-ova-amber/20 to-secondary/20" />
+                                )}
+                                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-center p-4">
+                                  <Play className="w-12 h-12 text-white mb-2" />
+                                  <p className="text-white text-sm">Clic para ver en {video.platform}</p>
+                                </div>
+                              </>
                             )
                           ) : (
                             <>
