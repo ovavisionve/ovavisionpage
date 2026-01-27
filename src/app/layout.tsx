@@ -120,6 +120,115 @@ export default function RootLayout({
             })
           }}
         />
+        {/* Schema.org ProfessionalService JSON-LD for GEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "name": "OVA VISION - Servicios de Automatización e IA",
+              "description": "Servicios profesionales de automatización empresarial, desarrollo de agentes de inteligencia artificial y branding digital en Venezuela y Latinoamérica.",
+              "url": "https://www.ovavisionagency.com/servicios",
+              "provider": {
+                "@type": "Organization",
+                "name": "OVA VISION",
+                "url": "https://www.ovavisionagency.com"
+              },
+              "areaServed": {
+                "@type": "GeoCircle",
+                "geoMidpoint": {
+                  "@type": "GeoCoordinates",
+                  "latitude": "10.4806",
+                  "longitude": "-66.9036"
+                },
+                "geoRadius": "5000"
+              },
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Servicios OVA VISION",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Automatización Empresarial",
+                      "description": "Sistemas de automatización low-code y no-code para optimizar procesos empresariales, desde gestión de pagos hasta ERPs completos."
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Agentes de IA Personalizados",
+                      "description": "Desarrollo de asistentes virtuales y chatbots con inteligencia artificial entrenados para tu negocio específico."
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Branding y Diseño Web",
+                      "description": "Creación de identidad de marca completa, logos, diseño de empaques y desarrollo de sitios web profesionales."
+                    }
+                  }
+                ]
+              }
+            })
+          }}
+        />
+        {/* Schema.org FAQPage JSON-LD for GEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "¿Qué es la automatización empresarial con IA?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "La automatización empresarial con IA es el uso de inteligencia artificial y herramientas low-code/no-code para optimizar procesos repetitivos como gestión de pagos, inventario, CRM, facturación y atención al cliente. Permite a las empresas reducir errores humanos, ahorrar tiempo y operar 24/7 sin intervención manual constante."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Cuánto cuesta implementar automatización en mi empresa?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "El costo varía según el nivel de automatización. La automatización básica (pagos, inventario, reservas) toma 1-2 semanas. La automatización media (CRM, reportes, facturación) requiere 3-4 semanas. Los sistemas avanzados tipo ERP pueden tomar 1-3 meses. Ofrecemos consultoría gratuita para evaluar tus necesidades específicas."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Qué es un agente de IA y cómo puede ayudar a mi negocio?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Un agente de IA es un asistente virtual inteligente entrenado específicamente para tu negocio. Puede atender clientes 24/7 por WhatsApp, web o redes sociales, responder consultas complejas, calificar leads, agendar reuniones y resolver problemas automáticamente. Esto reduce costos de atención al cliente y mejora la experiencia del usuario."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿OVA VISION trabaja con empresas fuera de Venezuela?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sí, OVA VISION ofrece servicios de automatización, agentes de IA y branding a empresas en toda Latinoamérica. Trabajamos de forma remota con clientes en Colombia, México, Argentina, Chile, Perú y otros países de la región, adaptando nuestras soluciones a las necesidades específicas de cada mercado."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "¿Qué incluye el servicio de branding de OVA VISION?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Nuestro servicio de branding incluye: concepto de marca completa, diseño de logo profesional con variaciones, paleta de colores, tipografías, manual de marca, ilustraciones personalizadas, diseño de empaques y desarrollo de sitio web con SEO optimizado. Cada proyecto se adapta a las necesidades específicas del cliente."
+                  }
+                }
+              ]
+            })
+          }}
+        />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
