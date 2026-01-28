@@ -144,21 +144,13 @@ export default function QueEsOva() {
                   <p className="text-secondary font-medium mb-2">Presidente</p>
                   <p className="text-sm text-muted-foreground">Venezolana</p>
                   <div className="flex justify-center gap-3 mt-4">
-                    <a 
-                      href="https://linkedin.com/in/oriana-russo-588093382" 
-                      target="_blank" 
+                    <a
+                      href="https://www.linkedin.com/in/oriana-russo-588093382/"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-secondary hover:text-secondary/80 transition-colors"
                     >
                       LinkedIn
-                    </a>
-                    <a 
-                      href="https://wa.me/17863523702" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-secondary hover:text-secondary/80 transition-colors"
-                    >
-                      WhatsApp
                     </a>
                   </div>
                 </div>
@@ -171,13 +163,13 @@ export default function QueEsOva() {
                   <p className="text-secondary font-medium mb-2">Vicepresidente</p>
                   <p className="text-sm text-muted-foreground">Portuguesa</p>
                   <div className="flex justify-center gap-3 mt-4">
-                    <a 
-                      href="https://wa.me/584245512363" 
-                      target="_blank" 
+                    <a
+                      href="https://www.instagram.com/valrodriguesabreu"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-secondary hover:text-secondary/80 transition-colors"
                     >
-                      WhatsApp
+                      Instagram
                     </a>
                   </div>
                 </div>

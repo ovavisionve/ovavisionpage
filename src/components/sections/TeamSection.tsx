@@ -1,4 +1,4 @@
-import { Linkedin, Phone, Instagram } from "lucide-react";
+import { Linkedin, Instagram } from "lucide-react";
 
 const team = [
   {
@@ -7,9 +7,8 @@ const team = [
     nationality: "Venezolana, Italiana",
     bio: "Actualmente cursando su tercer año en Suffolk University en Boston, MA. Cuenta con más de dos años de experiencia como Directora Creativa de Alimentos Santoni.",
     skills: "Liderazgo, estrategia y creatividad.",
-    linkedin: "https://linkedin.com/in/oriana-russo-588093382",
-    phone: "+17863523702",
-    phoneDisplay: "+1 786 352 3702",
+    linkedin: "https://www.linkedin.com/in/oriana-russo-588093382/",
+    instagram: null,
   },
   {
     name: "Valeria V. Rodrigues Abreu",
@@ -18,8 +17,7 @@ const team = [
     bio: "Graduada de Florida International University en Marketing y Logística. Apasionada por la inteligencia artificial y su potencial para transformar procesos.",
     skills: "Proactiva y comprometida con el crecimiento continuo.",
     linkedin: null,
-    phone: "+584245512363",
-    phoneDisplay: "+58 424 551 2363",
+    instagram: "https://www.instagram.com/valrodriguesabreu",
   },
 ];
 
@@ -59,10 +57,9 @@ const TeamSection = () => {
                       <Linkedin className="w-5 h-5" />
                     </a>
                   )}
-                  {member.phone && (
-                    <a href={`https://wa.me/${member.phone.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 h-10 rounded-lg bg-muted hover:bg-green-500/20 transition-colors text-sm">
-                      <Phone className="w-4 h-4" />
-                      <span className="hidden sm:inline">{member.phoneDisplay}</span>
+                  {member.instagram && (
+                    <a href={member.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center hover:bg-pink-500/20 transition-colors">
+                      <Instagram className="w-5 h-5" />
                     </a>
                   )}
                 </div>
