@@ -1,6 +1,10 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/sections/HeroSection";
 import ProcessSection from "@/components/sections/ProcessSection";
+import AnimatedStatsSection from "@/components/sections/AnimatedStatsSection";
+import TechStackSection from "@/components/sections/TechStackSection";
+import ROICalculatorSection from "@/components/sections/ROICalculatorSection";
+import AIAssistantPromoSection from "@/components/sections/AIAssistantPromoSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
@@ -28,12 +32,6 @@ const features = [
     title: "Mejora de Procesos",
     description: "Análisis y optimización de workflows para máxima eficiencia.",
   },
-];
-
-const stats = [
-  { value: "70%", label: "Reducción en tareas manuales" },
-  { value: "24/7", label: "Automatización continua" },
-  { value: "100%", label: "Soluciones personalizadas" },
 ];
 
 export default function Home() {
@@ -98,23 +96,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="py-16 lg:py-24 section-gradient-2">
-          <div className="container px-6 mx-auto">
-            <div className="max-w-4xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-ova-amber via-ova-orange to-white bg-clip-text text-transparent mb-2 drop-shadow-[0_0_10px_rgba(255,180,0,0.4)]">
-                      {stat.value}
-                    </p>
-                    <p className="text-foreground/70">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Animated Stats Section */}
+        <AnimatedStatsSection />
 
         {/* Why Choose Us Section */}
         <section className="py-24 lg:py-32 section-gradient-3">
@@ -185,7 +168,16 @@ export default function Home() {
           </div>
         </section>
 
+        {/* AI Assistant Promo Section */}
+        <AIAssistantPromoSection />
+
         <ProcessSection />
+
+        {/* Tech Stack Section */}
+        <TechStackSection />
+
+        {/* ROI Calculator Section */}
+        <ROICalculatorSection />
 
         {/* CTA Section */}
         <section className="py-24 lg:py-32 section-gradient-4">
