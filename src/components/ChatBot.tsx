@@ -95,7 +95,8 @@ const ChatBot = () => {
     <>
       {/* Chat Toggle Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(true)}
+        data-chatbot-trigger
         className={cn(
           "fixed bottom-24 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center",
           "bg-gradient-to-r from-secondary to-ova-cyan hover:opacity-90",
