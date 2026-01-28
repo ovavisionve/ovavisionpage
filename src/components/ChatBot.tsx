@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, X, Send, Loader2, Bot, User } from "lucide-react";
+import { Sparkles, X, Send, Loader2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,12 +12,30 @@ type Message = {
   content: string;
 };
 
+// Avatar de Ovi - el asistente de OVA VISION
+const OviAvatar = ({ size = "md" }: { size?: "sm" | "md" | "lg" }) => {
+  const sizeClasses = {
+    sm: "w-8 h-8 text-lg",
+    md: "w-10 h-10 text-xl",
+    lg: "w-14 h-14 text-3xl"
+  };
+
+  return (
+    <div className={cn(
+      "rounded-full bg-gradient-to-br from-secondary via-ova-cyan to-purple-500 flex items-center justify-center flex-shrink-0 shadow-lg",
+      sizeClasses[size]
+    )}>
+      <span role="img" aria-label="Ovi">🤖</span>
+    </div>
+  );
+};
+
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "¡Hola! 👋 Soy el asistente virtual de OVA VISION. ¿En qué puedo ayudarte hoy?",
+      content: "¡Hola! 👋 Soy Ovi, tu asistente virtual de OVA VISION. Estoy aquí para ayudarte con cualquier pregunta sobre automatización, agentes de IA o branding. ¿En qué puedo ayudarte hoy?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -98,13 +116,16 @@ const ChatBot = () => {
         onClick={() => setIsOpen(true)}
         data-chatbot-trigger
         className={cn(
-          "fixed bottom-24 right-6 z-50 w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center",
-          "bg-gradient-to-r from-secondary to-ova-cyan hover:opacity-90",
+          "fixed bottom-24 right-6 z-50 transition-all duration-300 hover:scale-110",
           isOpen && "scale-0 opacity-0"
         )}
-        aria-label="Abrir chat"
+        aria-label="Hablar con Ovi"
       >
-        <Sparkles className="w-6 h-6 text-foreground" />
+        <div className="relative">
+          <OviAvatar size="lg" />
+          {/* Indicador de disponibilidad */}
+          <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-400 border-2 border-background animate-pulse" />
+        </div>
       </button>
 
       {/* Chat Window */}
@@ -118,12 +139,13 @@ const ChatBot = () => {
           {/* Header */}
           <div className="bg-gradient-to-r from-secondary to-ova-cyan p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-background/20 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-foreground" />
-              </div>
+              <OviAvatar size="md" />
               <div>
-                <h3 className="font-semibold text-foreground">Asistente OVA</h3>
-                <p className="text-xs text-foreground/80">Siempre disponible</p>
+                <h3 className="font-semibold text-foreground">Ovi</h3>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <p className="text-xs text-foreground/80">En línea ahora</p>
+                </div>
               </div>
             </div>
             <button
@@ -147,9 +169,7 @@ const ChatBot = () => {
                   )}
                 >
                   {message.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                      <Bot className="w-4 h-4 text-secondary" />
-                    </div>
+                    <OviAvatar size="sm" />
                   )}
                   <div
                     className={cn(
@@ -170,11 +190,14 @@ const ChatBot = () => {
               ))}
               {isLoading && messages[messages.length - 1]?.role === "user" && (
                 <div className="flex gap-2 justify-start">
-                  <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                    <Bot className="w-4 h-4 text-secondary" />
-                  </div>
-                  <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-2">
-                    <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                  <OviAvatar size="sm" />
+                  <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-3">
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-muted-foreground mr-1">Ovi está escribiendo</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
                   </div>
                 </div>
               )}
@@ -188,7 +211,7 @@ const ChatBot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Escribe tu mensaje..."
+                placeholder="Pregúntale a Ovi..."
                 disabled={isLoading}
                 className="flex-1 bg-background/50 border-border/50 focus:border-secondary"
               />
