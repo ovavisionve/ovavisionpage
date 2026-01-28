@@ -228,10 +228,11 @@ export async function POST(request: NextRequest) {
       try {
         botResponse = await callGroq(messages);
         usedGemini = true; // mantener el nombre para compatibilidad con logs
-      } catch (error) {
+      } catch (error: any) {
         console.error("Groq error:", error);
-        botResponse =
-          "Lo siento, estoy teniendo problemas técnicos. Por favor, contáctanos directamente a través de WhatsApp: +58 4245781707 o email: ovavision.ve@gmail.com";
+        // Mostrar error específico para debugging (quitar después)
+        const errorDetail = error?.message || "Error desconocido";
+        botResponse = `Error: ${errorDetail}. Contáctanos por WhatsApp: +58 4245781707`;
       }
     }
 
