@@ -6,8 +6,8 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 );
 
-const GEMINI_API_KEY = process.env.GOOGLE_GEMINI_API_KEY;
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 // Función para buscar respuestas en FAQ con timeout
 async function searchFAQ(userMessage: string) {
@@ -65,10 +65,10 @@ async function searchFAQ(userMessage: string) {
   }
 }
 
-// Función para llamar a Gemini con timeout
-async function callGemini(messages: any[]) {
-  if (!GEMINI_API_KEY) {
-    throw new Error("GOOGLE_GEMINI_API_KEY not configured");
+// Función para llamar a Groq con timeout
+async function callGroq(messages: any[]) {
+  if (!GROQ_API_KEY) {
+    throw new Error("GROQ_API_KEY not configured");
   }
 
   const systemPrompt = `Eres un asistente de soporte para OVA VISION, una agencia de automatización con IA y branding estratégico ubicada en Venezuela.
@@ -88,27 +88,27 @@ Información sobre OVA VISION:
 - Horario: Lunes a viernes, 9 AM - 6 PM (hora Venezuela)`;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundo timeout para Gemini
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundo timeout
 
   try {
-    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+    const response = await fetch(GROQ_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${GROQ_API_KEY}`,
       },
       signal: controller.signal,
       body: JSON.stringify({
-        system: systemPrompt,
-        contents: messages.map((msg) => ({
-          role: msg.role === "user" ? "user" : "model",
-          parts: [{ text: msg.content }],
-        })),
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 1024,
-        },
+        model: "llama-3.1-8b-instant",
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...messages.map((msg) => ({
+            role: msg.role,
+            content: msg.content,
+          })),
+        ],
+        temperature: 0.7,
+        max_tokens: 1024,
       }),
     });
 
@@ -116,14 +116,14 @@ Información sobre OVA VISION:
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`Gemini API error: ${error.error?.message || "Unknown error"}`);
+      throw new Error(`Groq API error: ${error.error?.message || "Unknown error"}`);
     }
 
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const text = data.choices?.[0]?.message?.content;
 
     if (!text) {
-      throw new Error("No response from Gemini");
+      throw new Error("No response from Groq");
     }
 
     return text;
@@ -224,12 +224,12 @@ export async function POST(request: NextRequest) {
       usedFaq = true;
       faqId = faqMatch.id;
     } else {
-      // 2. Usar Gemini como fallback
+      // 2. Usar Groq como fallback
       try {
-        botResponse = await callGemini(messages);
-        usedGemini = true;
+        botResponse = await callGroq(messages);
+        usedGemini = true; // mantener el nombre para compatibilidad con logs
       } catch (error) {
-        console.error("Gemini error:", error);
+        console.error("Groq error:", error);
         botResponse =
           "Lo siento, estoy teniendo problemas técnicos. Por favor, contáctanos directamente a través de WhatsApp: +58 4245781707 o email: ovavision.ve@gmail.com";
       }
