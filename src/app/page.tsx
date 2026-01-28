@@ -5,8 +5,10 @@ import AnimatedStatsSection from "@/components/sections/AnimatedStatsSection";
 import TechStackSection from "@/components/sections/TechStackSection";
 import ROICalculatorSection from "@/components/sections/ROICalculatorSection";
 import AIAssistantPromoSection from "@/components/sections/AIAssistantPromoSection";
+import CaseStudiesSection from "@/components/sections/CaseStudiesSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Cpu, Palette, Zap, Bot, TrendingUp, Shield, Users } from "lucide-react";
@@ -54,7 +56,7 @@ export default function Home() {
         <section id="servicios" className="py-24 lg:py-32 section-gradient-1">
           <div className="container px-6 mx-auto">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
+              <ScrollReveal animation="fade-up" className="text-center mb-16">
                 <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-medium mb-4">
                   Nuestros Servicios
                 </span>
@@ -67,31 +69,30 @@ export default function Home() {
                 <p className="text-lg text-foreground/80 max-w-3xl mx-auto">
                   Combinamos automatización inteligente, IA y branding estratégico para impulsar tu empresa al siguiente nivel.
                 </p>
-              </div>
+              </ScrollReveal>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                {features.map((feature) => (
-                  <div
-                    key={feature.title}
-                    className="glass-card p-6 group hover:scale-105 transition-all duration-300 hover:border-secondary/30"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-secondary to-ova-cyan flex items-center justify-center mb-4 group-hover:shadow-lg group-hover:shadow-secondary/30 transition-shadow">
-                      <feature.icon className="w-6 h-6 text-foreground" />
+                {features.map((feature, index) => (
+                  <ScrollReveal key={feature.title} animation="fade-up" delay={index * 100}>
+                    <div className="glass-card p-6 h-full group hover:scale-105 transition-all duration-300 hover:border-secondary/30">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-secondary to-ova-cyan flex items-center justify-center mb-4 group-hover:shadow-lg group-hover:shadow-secondary/30 transition-shadow">
+                        <feature.icon className="w-6 h-6 text-foreground" />
+                      </div>
+                      <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
+                      <p className="text-sm text-foreground/70">{feature.description}</p>
                     </div>
-                    <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
-                    <p className="text-sm text-foreground/70">{feature.description}</p>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
 
-              <div className="text-center">
+              <ScrollReveal animation="fade-up" delay={400} className="text-center">
                 <Link href="/servicios">
                   <Button variant="hero" size="xl">
                     Ver todos los servicios
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </section>
@@ -104,7 +105,7 @@ export default function Home() {
           <div className="container px-6 mx-auto">
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
+                <ScrollReveal animation="fade-right">
                   <span className="inline-block px-4 py-2 rounded-full bg-ova-amber/10 text-ova-amber text-sm font-medium mb-4">
                     ¿Por qué OVA VISION?
                   </span>
@@ -115,7 +116,7 @@ export default function Home() {
                     </span>
                   </h2>
                   <p className="text-lg text-foreground/80 mb-8">
-                    No somos solo proveedores de tecnología. Somos socios estratégicos que entienden 
+                    No somos solo proveedores de tecnología. Somos socios estratégicos que entienden
                     tus procesos y diseñan soluciones a medida para maximizar tu productividad.
                   </p>
                   <Link href="/que-es-ova">
@@ -124,44 +125,50 @@ export default function Home() {
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </Link>
-                </div>
+                </ScrollReveal>
 
                 <div className="space-y-4">
-                  <div className="glass-card p-6 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                      <TrendingUp className="w-5 h-5 text-secondary" />
+                  <ScrollReveal animation="fade-left" delay={0}>
+                    <div className="glass-card p-6 flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                        <TrendingUp className="w-5 h-5 text-secondary" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold mb-1">Resultados Medibles</h3>
+                        <p className="text-sm text-foreground/70">
+                          Cada proyecto tiene KPIs claros y ROI definido desde el inicio.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold mb-1">Resultados Medibles</h3>
-                      <p className="text-sm text-foreground/70">
-                        Cada proyecto tiene KPIs claros y ROI definido desde el inicio.
-                      </p>
-                    </div>
-                  </div>
+                  </ScrollReveal>
 
-                  <div className="glass-card p-6 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                      <Shield className="w-5 h-5 text-secondary" />
+                  <ScrollReveal animation="fade-left" delay={150}>
+                    <div className="glass-card p-6 flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                        <Shield className="w-5 h-5 text-secondary" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold mb-1">Soporte Continuo</h3>
+                        <p className="text-sm text-foreground/70">
+                          No desaparecemos después de la implementación. Estamos contigo siempre.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold mb-1">Soporte Continuo</h3>
-                      <p className="text-sm text-foreground/70">
-                        No desaparecemos después de la implementación. Estamos contigo siempre.
-                      </p>
-                    </div>
-                  </div>
+                  </ScrollReveal>
 
-                  <div className="glass-card p-6 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                      <Users className="w-5 h-5 text-secondary" />
+                  <ScrollReveal animation="fade-left" delay={300}>
+                    <div className="glass-card p-6 flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                        <Users className="w-5 h-5 text-secondary" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold mb-1">Experiencia Local</h3>
+                        <p className="text-sm text-foreground/70">
+                          Entendemos el mercado venezolano con estándares internacionales.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold mb-1">Experiencia Local</h3>
-                      <p className="text-sm text-foreground/70">
-                        Entendemos el mercado venezolano con estándares internacionales.
-                      </p>
-                    </div>
-                  </div>
+                  </ScrollReveal>
                 </div>
               </div>
             </div>
@@ -179,10 +186,13 @@ export default function Home() {
         {/* ROI Calculator Section */}
         <ROICalculatorSection />
 
+        {/* Case Studies Section */}
+        <CaseStudiesSection />
+
         {/* CTA Section */}
         <section className="py-24 lg:py-32 section-gradient-4">
           <div className="container px-6 mx-auto">
-            <div className="max-w-3xl mx-auto text-center">
+            <ScrollReveal animation="zoom-in" className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                 ¿Listo para{" "}
                 <span className="bg-gradient-to-r from-ova-amber via-ova-orange to-white bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,180,0,0.5)]">
@@ -191,7 +201,7 @@ export default function Home() {
                 tu empresa?
               </h2>
               <p className="text-lg text-foreground/80 mb-8">
-                Agenda una consultoría gratuita y descubre cómo podemos transformar tu negocio 
+                Agenda una consultoría gratuita y descubre cómo podemos transformar tu negocio
                 con automatización inteligente y branding estratégico.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -206,7 +216,7 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </section>
 
