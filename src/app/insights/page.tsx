@@ -14,6 +14,8 @@ import { Calendar, User, Search, ArrowRight, Clock, Play, ChevronLeft, ChevronRi
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { type BlogPost } from "@/lib/blog-data";
+import { InsightsListSchema } from "@/components/ArticleSchema";
+import { getAuthorByName } from "@/lib/authors-data";
 
 interface VideoShort {
   id: string;
@@ -103,6 +105,9 @@ export default function Insights() {
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
+      {/* Schema.org JSON-LD para SEO */}
+      {posts.length > 0 && <InsightsListSchema posts={posts} />}
+
       {/* Animated background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="bg-orb bg-orb-amber w-[600px] h-[600px] -top-40 -left-40" style={{ animationDelay: '0s' }} />
@@ -126,7 +131,7 @@ export default function Insights() {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Artículos, videos y recursos para transformar tu negocio con tecnología inteligente.
+                Artículos, guías y recursos para transformar tu negocio con tecnología inteligente. Aprende sobre automatización, branding y estrategia digital.
               </p>
             </div>
           </div>
@@ -335,66 +340,89 @@ export default function Insights() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredPosts.map((post) => (
-                    <Link
-                      key={post.id}
-                      href={`/insights/${post.slug}`}
-                      className="glass-card overflow-hidden group hover:scale-[1.02] transition-all duration-300"
-                    >
-                      <div className="relative w-full h-48 overflow-hidden">
-                        {post.cover_image ? (
-                          <img
-                            src={post.cover_image}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-ova-amber/20 to-secondary/20 flex items-center justify-center">
-                            <span className="text-4xl">📝</span>
+                  {filteredPosts.map((post) => {
+                    const author = getAuthorByName(post.author_name);
+                    // Alt text descriptivo para SEO de imágenes
+                    const imageAlt = `${post.title} - Artículo sobre ${post.category || 'automatización'} por ${author.name} en OVA VISION`;
+
+                    return (
+                      <article
+                        key={post.id}
+                        className="glass-card overflow-hidden group hover:scale-[1.02] transition-all duration-300"
+                        itemScope
+                        itemType="https://schema.org/Article"
+                      >
+                        <Link href={`/insights/${post.slug}`}>
+                          <figure className="relative w-full h-48 overflow-hidden">
+                            {post.cover_image ? (
+                              <img
+                                src={post.cover_image}
+                                alt={imageAlt}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                itemProp="image"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-ova-amber/20 to-secondary/20 flex items-center justify-center">
+                                <span className="text-4xl" aria-hidden="true">📝</span>
+                              </div>
+                            )}
+                          </figure>
+
+                          <div className="p-6">
+                            {post.category && (
+                              <span
+                                className="inline-block px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-medium mb-3"
+                                itemProp="articleSection"
+                              >
+                                {post.category}
+                              </span>
+                            )}
+
+                            <h3
+                              className="text-lg font-bold mb-2 group-hover:text-secondary transition-colors line-clamp-2"
+                              itemProp="headline"
+                            >
+                              {post.title}
+                            </h3>
+
+                            {post.excerpt && (
+                              <p
+                                className="text-sm text-muted-foreground mb-4 line-clamp-2"
+                                itemProp="description"
+                              >
+                                {post.excerpt}
+                              </p>
+                            )}
+
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
+                              <div className="flex items-center gap-1" itemProp="author" itemScope itemType="https://schema.org/Person">
+                                <User className="w-3 h-3" aria-hidden="true" />
+                                <span itemProp="name">{author.name}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Calendar className="w-3 h-3" aria-hidden="true" />
+                                <time
+                                  dateTime={post.published_at || post.created_at}
+                                  itemProp="datePublished"
+                                >
+                                  {format(new Date(post.published_at || post.created_at), "d MMM yyyy", { locale: es })}
+                                </time>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" aria-hidden="true" />
+                                <span>{estimateReadingTime(post.excerpt)} min</span>
+                              </div>
+                            </div>
+
+                            <div className="mt-4 flex items-center gap-2 text-secondary text-sm font-medium group-hover:gap-3 transition-all">
+                              Leer más <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                            </div>
                           </div>
-                        )}
-                      </div>
-
-                      <div className="p-6">
-                        {post.category && (
-                          <span className="inline-block px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-medium mb-3">
-                            {post.category}
-                          </span>
-                        )}
-
-                        <h3 className="text-lg font-bold mb-2 group-hover:text-secondary transition-colors line-clamp-2">
-                          {post.title}
-                        </h3>
-
-                        {post.excerpt && (
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                            {post.excerpt}
-                          </p>
-                        )}
-
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground flex-wrap">
-                          <div className="flex items-center gap-1">
-                            <User className="w-3 h-3" />
-                            <span>{post.author_name || "OVA VISION"}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            <span>
-                              {format(new Date(post.published_at || post.created_at), "d MMM yyyy", { locale: es })}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            <span>{estimateReadingTime(post.excerpt)} min</span>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 flex items-center gap-2 text-secondary text-sm font-medium group-hover:gap-3 transition-all">
-                          Leer más <ArrowRight className="w-4 h-4" />
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                        </Link>
+                      </article>
+                    );
+                  })}
                 </div>
               )}
             </div>
